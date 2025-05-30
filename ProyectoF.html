@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Validador de Contraseñas</title>
+
+  <!-- PyScript -->
+  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+  <!-- Tus estilos o los del sitio -->
+  <style>
+    body { font-family:sans-serif; max-width:480px; margin:2rem auto; padding:1rem; }
+    input, button { width:100%; padding:.5rem; font-size:1rem; margin-top:1rem; }
+    .resultado { margin-top:1rem; padding:1rem; border-radius:4px; }
+    .valida { background:#e0f8e9; color:#064e3b; border:1px solid #10b981; }
+    .invalida { background:#fdecea; color:#7f1d1d; border:1px solid #ef4444; }
+    ul { margin:0.5rem 0 0 1.2rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Navegación (puedes adaptar el <ul> a tu propio menú) -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="proyecto1.html">Proyecto 1</a></li>
+      <li><strong>Validador de Contraseñas</strong></li>
+    </ul>
+  </nav>
+
+  <h1>Validador de Contraseñas</h1>
+  <ul>
+    <li>Longitud ≥ 8</li>
+    <li>Al menos 1 mayúscula</li>
+    <li>Al menos 1 número</li>
+    <li>Al menos 1 carácter especial <code>!@#$%^&*()_+=-</code></li>
+  </ul>
+
+  <input type="password" id="pwd" placeholder="Escribe tu contraseña…" />
+  <button id="validateBtn">Validar</button>
+  <div id="resultado" class="resultado" aria-live="polite"></div>
+
+  <!-- PyScript: tu código Python en el navegador -->
+  <py-script>
+from js import document
+
+def validar_password(ev=None):
+    pwd = document.getElementById("pwd").value
+    especiales = set("!@#$%^&*()_+=-")
+    faltan = []
+    if len(pwd) < 8:              faltan.append("Longitud ≥ 8")
+    if not any(c.isupper() for c in pwd):  faltan.append("1 mayúscula")
+    if not any(c.isdigit() for c in pwd):  faltan.append("1 número")
+    if not any(c in especiales for c in pwd): faltan.append("1 carácter especial")
+    div = document.getElementById("resultado")
+    if not faltan:
+        div.className = "resultado valida"
+        div.innerHTML = "✅ <strong>VÁLIDA</strong>"
+    else:
+        div.className = "resultado invalida"
+        lista = "".join(f"<li>{x}</li>" for x in faltan)
+        div.innerHTML = f"❌ <strong>INVÁLIDA</strong><ul>{lista}</ul>"
+
+# Vincula eventos
+document.getElementById("validateBtn")\
+        .addEventListener("click", validar_password)
+document.getElementById("pwd")\
+        .addEventListener("keyup", lambda e: validar_password() if e.key=="Enter" else None)
+  </py-script>
+
+</body>
+</html>

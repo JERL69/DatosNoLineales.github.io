@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pseudocódigo - Grafos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('fondoPS.avif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+        h1 {
+            font-family: 'Lobster', cursive;
+            margin-bottom: 50px;
+        }
+        .content {
+            max-width: 900px;
+            margin: auto;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        pre {
+            background-color: black;
+            color: lime;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pseudocódigo - Grafos</h1>
+    <div class="content">
+        <h2>1. Solución de la Torre de Hanói para Q4 (4 discos)</h2>
+        <pre>
+Inicio TorreDeHanoiQ4()
+    Crear grafo Q4 con 16 vértices (4 bits cada uno)
+    Inicializar estado inicial: 0000 (todos los discos en el primer pivote)
+    Inicializar estado final: 1111 (todos los discos en el tercer pivote)
+    Crear una lista vacía para almacenar el ciclo hamiltoniano
+    Llamar a la función EncontrarCicloHamiltoniano(Q4, 0000, lista)
+    Retornar lista con el ciclo hamiltoniano
+Fin
+
+Función EncontrarCicloHamiltoniano(grafo, estado_actual, lista)
+    Agregar estado_actual a la lista
+    Si la lista tiene 16 estados Entonces
+        Retornar lista
+    Para cada vecino de estado_actual en grafo Hacer
+        Si vecino no está en lista Entonces
+            Llamar a EncontrarCicloHamiltoniano(grafo, vecino, lista)
+            Si lista tiene 16 estados Entonces
+                Retornar lista
+    FinPara
+    Eliminar estado_actual de la lista
+Fin
+        </pre>
+
+        <h2>2. Solución de la Torre de Hanói para Q5 (5 discos)</h2>
+        <pre>
+Inicio TorreDeHanoiQ5()
+    Crear grafo Q5 con 32 vértices (5 bits cada uno)
+    Inicializar estado inicial: 00000 (todos los discos en el primer pivote)
+    Inicializar estado final: 11111 (todos los discos en el tercer pivote)
+    Crear una lista vacía para almacenar el ciclo hamiltoniano
+    Llamar a la función EncontrarCicloHamiltoniano(Q5, 00000, lista)
+    Retornar lista con el ciclo hamiltoniano
+Fin
+
+Función EncontrarCicloHamiltoniano(grafo, estado_actual, lista)
+    Agregar estado_actual a la lista
+    Si la lista tiene 32 estados Entonces
+        Retornar lista
+    Para cada vecino de estado_actual en grafo Hacer
+        Si vecino no está en lista Entonces
+            Llamar a EncontrarCicloHamiltoniano(grafo, vecino, lista)
+            Si lista tiene 32 estados Entonces
+                Retornar lista
+    FinPara
+    Eliminar estado_actual de la lista
+Fin
+        </pre>
+    </div>
+    
+    <div class="button-container">
+        <a href="Principal.html">Volver al inicio</a>
+    </div>
+</body>
+</html>

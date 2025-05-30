@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pseudocódigo - Grafos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('fondoPS.avif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+        h1 {
+            font-family: 'Lobster', cursive;
+            margin-bottom: 50px;
+        }
+        .content {
+            max-width: 900px;
+            margin: auto;
+            text-align: left;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        pre {
+            background-color: black;
+            color: lime;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pseudocódigo - Grafos</h1>
+    <div class="content">
+        <h2>1. Recorrido en anchura (BFS)</h2>
+        <pre>
+Inicio BFS(grafo, nodo_inicio)
+    Crear una cola vacía
+    Marcar nodo_inicio como visitado y encolarlo
+    Mientras la cola no esté vacía Hacer
+        Extraer nodo de la cola
+        Para cada vecino del nodo extraído Hacer
+            Si el vecino no ha sido visitado Entonces
+                Marcar como visitado y encolar
+    FinMientras
+Fin
+        </pre>
+
+        <h2>2. Recorrido en profundidad (DFS)</h2>
+        <pre>
+Inicio DFS(grafo, nodo_inicio)
+    Crear una pila vacía
+    Marcar nodo_inicio como visitado y apilarlo
+    Mientras la pila no esté vacía Hacer
+        Extraer nodo de la pila
+        Para cada vecino del nodo extraído Hacer
+            Si el vecino no ha sido visitado Entonces
+                Marcar como visitado y apilar
+    FinMientras
+Fin
+        </pre>
+
+        <h2>3. Algoritmo de Dijkstra (Ruta más corta)</h2>
+        <pre>
+Inicio Dijkstra(grafo, origen)
+    Inicializar distancias con infinito, excepto el origen
+    Crear una cola de prioridad y agregar el nodo origen
+    Mientras la cola no esté vacía Hacer
+        Extraer nodo con menor distancia
+        Para cada vecino del nodo extraído Hacer
+            Si la distancia calculada es menor a la almacenada Entonces
+                Actualizar distancia y agregar a la cola
+    FinMientras
+Fin
+        </pre>
+
+        <h2>4. Algoritmo de Kruskal (Árbol de expansión mínimo)</h2>
+        <pre>
+Inicio Kruskal(grafo)
+    Ordenar aristas por peso
+    Inicializar estructura de conjuntos disjuntos
+    Para cada arista en orden Hacer
+        Si los nodos no están en el mismo conjunto Entonces
+            Unir los conjuntos y agregar arista al árbol
+    FinPara
+    Retornar árbol de expansión mínimo
+Fin
+        </pre>
+
+        <h2>5. Algoritmo de Floyd-Warshall (Todas las rutas más cortas)</h2>
+        <pre>
+Inicio FloydWarshall(grafo)
+    Inicializar matriz de distancias con infinito, 0 en la diagonal
+    Para cada nodo intermedio k Hacer
+        Para cada nodo i Hacer
+            Para cada nodo j Hacer
+                Actualizar distancia mínima entre i y j usando k
+    FinPara
+    Retornar matriz de distancias mínimas
+Fin
+        </pre>
+    </div>
+    
+    <div class="button-container">
+        <a href="Index.html">Volver al inicio</a>
+    </div>
+</body>
+</html>

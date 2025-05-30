@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagramas de Flujo - Grafos</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('fondoDI.jpg');
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .diagram {
+            background: white;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .button-container a {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Diagramas de Flujo - Grafos</h1>
+
+    <div class="diagram">
+        <h2>1. Recorrido en anchura (BFS)</h2>
+        <pre class="mermaid">
+        graph TD;
+            A[Inicio] --> B[Crear una cola vacía];
+            B --> C[Marcar nodo de inicio como visitado];
+            C --> D[Encolar nodo de inicio];
+            D --> E[¿Cola vacía?];
+            E -->|Sí| F[Fin];
+            E -->|No| G[Desencolar nodo];
+            G --> H[Explorar vecinos];
+            H --> I{¿Vecino visitado?};
+            I -->|No| J[Marcar como visitado y encolar];
+            J --> H;
+            I -->|Sí| E;
+        </pre>
+    </div>
+
+    <div class="diagram">
+        <h2>2. Recorrido en profundidad (DFS)</h2>
+        <pre class="mermaid">
+        graph TD;
+            A[Inicio] --> B[Crear una pila vacía];
+            B --> C[Marcar nodo de inicio como visitado];
+            C --> D[Apilar nodo de inicio];
+            D --> E[¿Pila vacía?];
+            E -->|Sí| F[Fin];
+            E -->|No| G[Desapilar nodo];
+            G --> H[Explorar vecinos];
+            H --> I{¿Vecino visitado?};
+            I -->|No| J[Marcar como visitado y apilar];
+            J --> H;
+            I -->|Sí| E;
+        </pre>
+    </div>
+
+    <div class="diagram">
+        <h2>3. Algoritmo de Dijkstra</h2>
+        <pre class="mermaid">
+        graph TD;
+            A[Inicio] --> B[Inicializar distancias con infinito];
+            B --> C[Colocar distancia 0 en nodo de origen];
+            C --> D[Agregar nodo origen a la cola de prioridad];
+            D --> E[¿Cola vacía?];
+            E -->|Sí| F[Fin];
+            E -->|No| G[Extraer nodo con menor distancia];
+            G --> H[Explorar vecinos];
+            H --> I{¿Nueva distancia es menor?};
+            I -->|Sí| J[Actualizar distancia y agregar a la cola];
+            J --> H;
+            I -->|No| E;
+        </pre>
+    </div>
+
+    <div class="diagram">
+        <h2>4. Algoritmo de Kruskal</h2>
+        <pre class="mermaid">
+        graph TD;
+            A[Inicio] --> B[Ordenar aristas por peso];
+            B --> C[Inicializar conjuntos disjuntos];
+            C --> D[Iterar sobre las aristas ordenadas];
+            D --> E{¿Mismo conjunto?};
+            E -->|Sí| D;
+            E -->|No| F[Unir conjuntos y agregar arista];
+            F --> D;
+            D --> G[Retornar árbol mínimo];
+            G --> H[Fin];
+        </pre>
+    </div>
+
+    <div class="diagram">
+        <h2>5. Algoritmo de Floyd-Warshall</h2>
+        <pre class="mermaid">
+        graph TD;
+            A[Inicio] --> B[Inicializar matriz de distancias];
+            B --> C[Iterar sobre cada nodo intermedio];
+            C --> D[Iterar sobre cada nodo de origen];
+            D --> E[Iterar sobre cada nodo de destino];
+            E --> F{¿Mejora la distancia con el intermedio?};
+            F -->|Sí| G[Actualizar matriz de distancias];
+            G --> E;
+            F -->|No| C;
+            C --> H[Retornar matriz final];
+            H --> I[Fin];
+        </pre>
+    </div>
+
+    <div class="button-container">
+        <a href="Index.html">Volver al inicio</a>
+    </div>
+
+</body>
+</html>

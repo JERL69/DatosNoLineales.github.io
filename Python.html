@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios Python - PHYTON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .btn-back {
+            background-color: #007bff;
+        }
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            height: 200px;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(20, 30px);
+            grid-gap: 2px;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #f4f4f9;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .obstacle {
+            background-color: #000;
+        }
+        .start {
+            background-color: green;
+            color: white;
+        }
+        .goal {
+            background-color: red;
+            color: white;
+        }
+        .visited {
+            background-color: yellow;
+        }
+        .path {
+            background-color: blue;
+        }
+        .slider-container {
+            margin: 15px 0;
+        }
+        .slider-container label {
+            display: inline-block;
+            width: 200px;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .example-box {
+            display: flex;
+            margin: 10px 0;
+        }
+        .good-example {
+            flex: 1;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .bad-example {
+            flex: 1;
+            padding: 10px;
+            background-color: #fae8e8;
+            border-radius: 5px;
+        }
+        .dependency-display {
+            min-height: 50px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .result-box {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .tree-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .tree-node {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            border: 1px solid #999;
+            border-radius: 3px;
+            background-color: white;
+        }
+        .tree-line {
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background-color: #999;
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+        .flex-col {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Parcial 2</h1>
+    </header>
+
+    <div class="container">
+        <button class="button btn-back" onclick="window.location.href='index.html'">Volver al Inicio</button>
+
+        <!-- Punto 1: Carrito de Compras -->
+        <h2>Punto 1: Carrito de Compras</h2>
+        <div>
+            <label for="producto">Producto:</label>
+            <input type="text" id="producto" placeholder="Escribe el nombre del producto">
+            <button class="button" id="agregarBtn">Agregar</button>
+            <button class="button" id="eliminarBtn">Eliminar</button>
+            <button class="button" id="mostrarBtn">Mostrar Carrito</button>
+        </div>
+        <h3>Carrito:</h3>
+        <textarea id="carritoArea" readonly></textarea>
+
+        <!-- Punto 2: Registro de Correos -->
+        <h2>Punto 2: Registro de Correos</h2>
+        <div>
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" placeholder="Escribe el correo">
+            <button class="button" id="agregarCorreoBtn">Agregar correo</button>
+        </div>
+        <h3>Correos Registrados:</h3>
+        <textarea id="correosArea" readonly></textarea>
+
+        <!-- Punto 3: Agenda de Contactos -->
+        <h2>Punto 3: Agenda de Contactos</h2>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" placeholder="Escribe el nombre del contacto">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" placeholder="Escribe el teléfono">
+            <button class="button" id="agregarContactoBtn">Agregar</button>
+            <button class="button" id="buscarContactoBtn">Buscar</button>
+        </div>
+        <h3>Agenda de Contactos:</h3>
+        <textarea id="agendaArea" readonly></textarea>
+
+        <!-- Punto 4: BFS y DFS -->
+        <h2>Punto 4: BFS y DFS</h2>
+        <div>
+            <button class="button" onclick="runBFS()">Ejecutar BFS</button>
+            <button class="button" onclick="runDFS()">Ejecutar DFS</button>
+            <button class="button" onclick="resetGrid()">Reiniciar</button>
+        </div>
+        <h3>Grid:</h3>
+        <div id="grid-container" class="grid-container"></div>
+
+        <!-- Punto 5: DFS con Obstáculos Automáticos -->
+        <h2>Punto 5: DFS con Obstáculos Automáticos</h2>
+        <div class="slider-container">
+            <label for="obstacle-density">Densidad de obstáculos: <span id="density-value">30</span>%</label>
+            <input type="range" id="obstacle-density" min="0" max="50" value="30" oninput="updateDensity(this.value)">
+        </div>
+        <div>
+            <button class="button" onclick="runAutoDFS()">Ejecutar DFS Automático</button>
+            <button class="button" onclick="resetAutoGrid()">Generar Nueva Grid</button>
+        </div>
+        <h3>Grid Automática:</h3>
+        <div id="auto-grid-container" class="grid-container"></div>
+
+        <!-- Punto 6: Simulador de Stack -->
+        <h2>Punto 6: Simulador de Stack</h2>
+        <div>
+            <label for="stackInput">Elemento:</label>
+            <input type="text" id="stackInput" placeholder="Escribe un elemento">
+            <button class="button" onclick="pushStack()">Agregar</button>
+            <button class="button" onclick="popStack()">Eliminar</button>
+            <button class="button" onclick="showStack()">Mostrar Stack</button>
+        </div>
+        <h3>Contenido del Stack:</h3>
+        <textarea id="stackArea" readonly></textarea>
+
+        <!-- Punto 7: Simulador de Queue -->
+        <h2>Punto 7: Simulador de Queue</h2>
+        <div>
+            <label for="queueInput">Elemento:</label>
+            <input type="text" id="queueInput" placeholder="Agrega un paciente">
+            <button class="button" onclick="enqueue()">Agregar</button>
+            <button class="button" onclick="dequeue()">Eliminar</button>
+            <button class="button" onclick="showQueue()">Mostrar</button>
+        </div>
+        <h3>Contenido de la Queue:</h3>
+        <textarea id="queueArea" readonly></textarea>
+
+        <!-- Punto 8: Árbol Binario de Búsqueda -->
+        <h2>Punto 8: Árbol Binario de Búsqueda</h2>
+        <div>
+            <label for="arbolValor">Valor:</label>
+            <input type="number" id="arbolValor" placeholder="Ingrese un número">
+            <button class="button" onclick="insertarEnArbol()">Insertar</button>
+            <button class="button" onclick="buscarEnArbol()">Buscar</button>
+            <button class="button" onclick="mostrarArbol()">Mostrar Árbol</button>
+            <button class="button" onclick="reiniciarArbol()">Reiniciar Árbol</button>
+        </div>
+        <h3>Representación del Árbol:</h3>
+        <div id="arbolVisual" class="tree-container"></div>
+        <textarea id="arbolArea" readonly></textarea>
+
+        <!-- Punto 9: Cálculo de Profundidad de Árbol -->
+        <h2>Punto 9: Cálculo de Profundidad de Árbol</h2>
+        <div>
+            <p>Este cálculo se realiza sobre el árbol creado en el Punto 8.</p>
+            <button class="button" onclick="calcularProfundidad()">Calcular Profundidad</button>
+        </div>
+        <h3>Resultado:</h3>
+        <textarea id="profundidadArea" readonly></textarea>
+
+        <!-- Punto 10: Detector de Dependencias Circulares (Versión Mejorada) -->
+        <h2>Punto 10: Detector de Dependencias Circulares</h2>
+        <div class="info-box">
+            <h3 style="margin-top: 0; color: #2c3e50;">¿Cómo funciona?</h3>
+            <p>Esta herramienta detecta cuando los módulos se necesitan unos a otros en círculo, lo que puede causar problemas.</p>
+            
+            <div class="example-box">
+                <div class="good-example">
+                    <h4 style="margin-top: 0;">Ejemplo Correcto</h4>
+                    <p>Pantalla → Datos<br>Datos → Almacenamiento</p>
+                </div>
+                <div class="bad-example">
+                    <h4 style="margin-top: 0;">Ejemplo con Problema</h4>
+                    <p>Pantalla → Datos<br>Datos → Pantalla</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-row">
+            <div class="flex-col">
+                <label for="modulo" style="display: block; margin-bottom: 5px; font-weight: bold;">Módulo:</label>
+                <input type="text" id="modulo" placeholder="Ej: Pantalla">
+            </div>
+            <div class="flex-col">
+                <label for="dependencia" style="display: block; margin-bottom: 5px; font-weight: bold;">Depende de:</label>
+                <input type="text" id="dependencia" placeholder="Ej: Datos">
+            </div>
+        </div>
+
+        <div class="flex-row" style="margin-bottom: 20px;">
+            <button class="button" onclick="agregarDependencia()" style="background-color: #28a745; flex: 1;">
+                Agregar Dependencia
+            </button>
+            <button class="button" onclick="verificarCiclos()" style="background-color: #17a2b8; flex: 1;">
+                Verificar Ciclos
+            </button>
+            <button class="button" onclick="reiniciarGrafo()" style="background-color: #6c757d; flex: 1;">
+                Reiniciar Todo
+            </button>
+        </div>
+
+        <h3 style="border-bottom: 2px solid #eee; padding-bottom: 5px;">Dependencias Actuales:</h3>
+        <div id="grafoVisual" class="dependency-display">
+            <p style="color: #6c757d; margin: 0;">(Aún no hay dependencias agregadas)</p>
+        </div>
+
+        <h3 style="border-bottom: 2px solid #eee; padding-bottom: 5px;">Resultado:</h3>
+        <div id="resultadoCiclos" class="result-box info">
+            <p style="margin: 0;">Presiona "Verificar Ciclos" para analizar</p>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // Punto 1: Carrito de Compras
+        // =============================================
+        let carrito = [];
+        
+        function agregarProducto() {
+            let producto = document.getElementById("producto").value.trim();
+            if (producto) {
+                carrito.push(producto);
+                document.getElementById("producto").value = "";
+                mostrarCarrito();
+            }
+        }
+
+        function eliminarProducto() {
+            let producto = document.getElementById("producto").value.trim();
+            let index = carrito.indexOf(producto);
+            if (index > -1) {
+                carrito.splice(index, 1);
+                alert(`Producto '${producto}' eliminado.`);
+                mostrarCarrito();
+            } else {
+                alert("Producto no encontrado.");
+            }
+            document.getElementById("producto").value = "";
+        }
+
+        function mostrarCarrito() {
+            let carritoArea = document.getElementById("carritoArea");
+            carritoArea.value = "Carrito de Compras:\n";
+            if (carrito.length > 0) {
+                carrito.forEach(producto => {
+                    carritoArea.value += "- " + producto + "\n";
+                });
+            } else {
+                carritoArea.value += "El carrito está vacío.";
+            }
+        }
+
+        document.getElementById("agregarBtn").addEventListener("click", agregarProducto);
+        document.getElementById("eliminarBtn").addEventListener("click", eliminarProducto);
+        document.getElementById("mostrarBtn").addEventListener("click", mostrarCarrito);
+
+        // =============================================
+        // Punto 2: Registro de Correos
+        // =============================================
+        let correos = new Set();
+
+        function agregarCorreo() {
+            let correo = document.getElementById("correo").value.trim();
+            if (correo) {
+                if (!correos.has(correo)) {
+                    correos.add(correo);
+                    alert("Correo registrado.");
+                } else {
+                    alert("Correo ya registrado.");
+                }
+                actualizarCorreos();
+                document.getElementById("correo").value = "";
+            }
+        }
+
+        function actualizarCorreos() {
+            let correosArea = document.getElementById("correosArea");
+            correosArea.value = "Correos Registrados:\n";
+            correos.forEach(correo => {
+                correosArea.value += "- " + correo + "\n";
+            });
+        }
+
+        document.getElementById("agregarCorreoBtn").addEventListener("click", agregarCorreo);
+
+        // =============================================
+        // Punto 3: Agenda de Contactos
+        // =============================================
+        let agenda = {};
+
+        function agregarContacto() {
+            let nombre = document.getElementById("nombre").value.trim();
+            let telefono = document.getElementById("telefono").value.trim();
+            if (nombre && telefono) {
+                agenda[nombre] = telefono;
+                alert("Contacto agregado.");
+                actualizarAgenda();
+                document.getElementById("nombre").value = "";
+                document.getElementById("telefono").value = "";
+            }
+        }
+
+        function buscarContacto() {
+            let nombre = document.getElementById("nombre").value.trim();
+            if (nombre in agenda) {
+                alert(`Teléfono: ${agenda[nombre]}`);
+            } else {
+                alert("Contacto no encontrado.");
+            }
+        }
+
+        function actualizarAgenda() {
+            let agendaArea = document.getElementById("agendaArea");
+            agendaArea.value = "Agenda de Contactos:\n";
+            for (let nombre in agenda) {
+                agendaArea.value += `${nombre}: ${agenda[nombre]}\n`;
+            }
+        }
+
+        document.getElementById("agregarContactoBtn").addEventListener("click", agregarContacto);
+        document.getElementById("buscarContactoBtn").addEventListener("click", buscarContacto);
+
+        // =============================================
+        // Punto 4: BFS y DFS
+        // =============================================
+        const TAM = 20;
+        let grid = Array(TAM).fill().map(() => Array(TAM).fill(0));
+        let start = { x: -1, y: -1 };
+        let goal = { x: -1, y: -1 };
+        const MOVS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+
+        function initGrid() {
+            const container = document.getElementById("grid-container");
+            container.innerHTML = '';
+
+            for (let i = 0; i < TAM; i++) {
+                for (let j = 0; j < TAM; j++) {
+                    let cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.setAttribute("data-x", i);
+                    cell.setAttribute("data-y", j);
+                    cell.addEventListener("click", (e) => setCell(e));
+                    container.appendChild(cell);
+
+                    if (Math.random() < 0.1) {
+                        grid[i][j] = 1;
+                        cell.classList.add("obstacle");
+                    }
+                }
+            }
+        }
+
+        function setCell(e) {
+            const x = e.target.getAttribute("data-x");
+            const y = e.target.getAttribute("data-y");
+
+            if (grid[x][y] === 1) return;
+
+            if (start.x === -1 && start.y === -1) {
+                start = { x: parseInt(x), y: parseInt(y) };
+                e.target.classList.add("start");
+            } else if (goal.x === -1 && goal.y === -1) {
+                goal = { x: parseInt(x), y: parseInt(y) };
+                e.target.classList.add("goal");
+            }
+        }
+
+        function bfs(start, goal) {
+            let queue = [start];
+            let visited = Array(TAM).fill().map(() => Array(TAM).fill(false));
+            let prev = Array(TAM).fill().map(() => Array(TAM).fill(null));
+
+            visited[start.x][start.y] = true;
+
+            while (queue.length > 0) {
+                let current = queue.shift();
+
+                if (current.x === goal.x && current.y === goal.y) {
+                    let path = [];
+                    let node = current;
+                    while (node) {
+                        path.push(node);
+                        node = prev[node.x][node.y];
+                    }
+                    return path.reverse();
+                }
+
+                for (let move of MOVS) {
+                    let nx = current.x + move[0];
+                    let ny = current.y + move[1];
+
+                    if (nx >= 0 && nx < TAM && ny >= 0 && ny < TAM && !visited[nx][ny] && grid[nx][ny] !== 1) {
+                        visited[nx][ny] = true;
+                        prev[nx][ny] = current;
+                        queue.push({ x: nx, y: ny });
+                    }
+                }
+            }
+
+            return [];
+        }
+
+        function dfs(start, goal) {
+            let stack = [start];
+            let visited = Array(TAM).fill().map(() => Array(TAM).fill(false));
+            let prev = Array(TAM).fill().map(() => Array(TAM).fill(null));
+
+            visited[start.x][start.y] = true;
+
+            while (stack.length > 0) {
+                let current = stack.pop();
+
+                if (current.x === goal.x && current.y === goal.y) {
+                    let path = [];
+                    let node = current;
+                    while (node) {
+                        path.push(node);
+                        node = prev[node.x][node.y];
+                    }
+                    return path.reverse();
+                }
+
+                for (let move of MOVS) {
+                    let nx = current.x + move[0];
+                    let ny = current.y + move[1];
+
+                    if (nx >= 0 && nx < TAM && ny >= 0 && ny < TAM && !visited[nx][ny] && grid[nx][ny] !== 1) {
+                        visited[nx][ny] = true;
+                        prev[nx][ny] = current;
+                        stack.push({ x: nx, y: ny });
+                    }
+                }
+            }
+
+            return [];
+        }
+
+        function renderPath(path) {
+            if (path.length === 0) {
+                alert("No se encontró un camino.");
+                return;
+            }
+
+            const cells = document.querySelectorAll(".cell");
+            cells.forEach(cell => cell.classList.remove("visited", "path"));
+
+            path.forEach(cell => {
+                let element = document.querySelector(`.cell[data-x='${cell.x}'][data-y='${cell.y}']`);
+                if (element) element.classList.add("path");
+            });
+        }
+
+        function runBFS() {
+            if (start.x === -1 || goal.x === -1) {
+                alert("Por favor, seleccione un punto de inicio y un punto de llegada.");
+                return;
+            }
+            let path = bfs(start, goal);
+            renderPath(path);
+        }
+
+        function runDFS() {
+            if (start.x === -1 || goal.x === -1) {
+                alert("Por favor, seleccione un punto de inicio y un punto de llegada.");
+                return;
+            }
+            let path = dfs(start, goal);
+            renderPath(path);
+        }
+
+        function resetGrid() {
+            start = { x: -1, y: -1 };
+            goal = { x: -1, y: -1 };
+            grid = Array(TAM).fill().map(() => Array(TAM).fill(0));
+            initGrid();
+        }
+
+        // =============================================
+        // Punto 5: DFS con Obstáculos Automáticos
+        // =============================================
+        let autoGrid = Array(TAM).fill().map(() => Array(TAM).fill(0));
+        let autoStart = null;
+        let autoGoal = null;
+        let obstacleDensity = 0.3;
+
+        function updateDensity(value) {
+            document.getElementById('density-value').textContent = value;
+            obstacleDensity = value / 100;
+        }
+
+        function initAutoGrid() {
+            const container = document.getElementById("auto-grid-container");
+            container.innerHTML = '';
+            
+            autoGrid = Array(TAM).fill().map(() => Array(TAM).fill(0));
+            autoStart = null;
+            autoGoal = null;
+            
+            for (let i = 0; i < TAM; i++) {
+                for (let j = 0; j < TAM; j++) {
+                    let cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.setAttribute("data-x", i);
+                    cell.setAttribute("data-y", j);
+                    cell.addEventListener("click", () => setAutoCell(i, j));
+                    container.appendChild(cell);
+                }
+            }
+            
+            generateObstacles();
+        }
+
+        function generateObstacles() {
+            for (let i = 0; i < TAM; i++) {
+                for (let j = 0; j < TAM; j++) {
+                    if (Math.random() < obstacleDensity) {
+                        autoGrid[i][j] = 1;
+                        const cell = document.querySelector(`#auto-grid-container .cell[data-x='${i}'][data-y='${j}']`);
+                        if (cell) cell.classList.add("obstacle");
+                    } else {
+                        autoGrid[i][j] = 0;
+                    }
+                }
+            }
+        }
+
+        function setAutoCell(x, y) {
+            const cell = document.querySelector(`#auto-grid-container .cell[data-x='${x}'][data-y='${y}']`);
+            
+            if (autoGrid[x][y] === 1) return;
+            
+            if (!autoStart) {
+                autoStart = { x, y };
+                cell.classList.add("start");
+            } else if (!autoGoal && !(x === autoStart.x && y === autoStart.y)) {
+                autoGoal = { x, y };
+                cell.classList.add("goal");
+            }
+        }
+
+        function autoDFS(start, goal) {
+            let stack = [start];
+            let visited = Array(TAM).fill().map(() => Array(TAM).fill(false));
+            let prev = Array(TAM).fill().map(() => Array(TAM).fill(null));
+
+            visited[start.x][start.y] = true;
+
+            while (stack.length > 0) {
+                let current = stack.pop();
+
+                if (current.x === goal.x && current.y === goal.y) {
+                    let path = [];
+                    let node = current;
+                    while (node) {
+                        path.push(node);
+                        node = prev[node.x][node.y];
+                    }
+                    return path.reverse();
+                }
+
+                const shuffledMoves = MOVS.sort(() => Math.random() - 0.5);
+                for (let move of shuffledMoves) {
+                    let nx = current.x + move[0];
+                    let ny = current.y + move[1];
+
+                    if (nx >= 0 && nx < TAM && ny >= 0 && ny < TAM && 
+                        !visited[nx][ny] && autoGrid[nx][ny] !== 1) {
+                        visited[nx][ny] = true;
+                        prev[nx][ny] = current;
+                        stack.push({ x: nx, y: ny });
+                    }
+                }
+            }
+
+            return [];
+        }
+
+        function renderAutoPath(path) {
+            const cells = document.querySelectorAll("#auto-grid-container .cell");
+            cells.forEach(cell => cell.classList.remove("path", "visited"));
+
+            if (path.length === 0) {
+                alert("No se encontró un camino válido!");
+                return;
+            }
+
+            for (let i = 1; i < path.length - 1; i++) {
+                const {x, y} = path[i];
+                const cell = document.querySelector(`#auto-grid-container .cell[data-x='${x}'][data-y='${y}']`);
+                if (cell) cell.classList.add("path");
+            }
+        }
+
+        function runAutoDFS() {
+            if (!autoStart || !autoGoal) {
+                alert("Debes establecer tanto el punto de inicio como el de llegada!");
+                return;
+            }
+            let path = autoDFS(autoStart, autoGoal);
+            renderAutoPath(path);
+        }
+
+        function resetAutoGrid() {
+            initAutoGrid();
+        }
+
+        // =============================================
+        // Punto 6: Simulador de Stack
+        // =============================================
+        let stack = [];
+
+        function pushStack() {
+            let elemento = document.getElementById("stackInput").value.trim();
+            if (elemento) {
+                stack.push(elemento);
+                document.getElementById("stackInput").value = "";
+                showStack();
+            }
+        }
+
+        function popStack() {
+            if (stack.length > 0) {
+                let elemento = stack.pop();
+                alert(`Elemento removido: ${elemento}`);
+            } else {
+                alert("El stack está vacío.");
+            }
+            showStack();
+        }
+
+        function showStack() {
+            let stackArea = document.getElementById("stackArea");
+            stackArea.value = "Stack:\n";
+            if (stack.length > 0) {
+                for (let i = stack.length - 1; i >= 0; i--) {
+                    stackArea.value += "- " + stack[i] + "\n";
+                }
+            } else {
+                stackArea.value += "El stack está vacío.";
+            }
+        }
+
+        // =============================================
+        // Punto 7: Simulador de Queue
+        // =============================================
+        let queue = [];
+
+        function enqueue() {
+            let element = document.getElementById("queueInput").value.trim();
+            if (element) {
+                queue.push(element);
+                document.getElementById("queueInput").value = "";
+                showQueue();
+            }
+        }
+
+        function dequeue() {
+            if (queue.length > 0) {
+                let removed = queue.shift();
+                alert(`Paciente eliminado: ${removed}`);
+                showQueue();
+            } else {
+                alert("La cola está vacía.");
+            }
+        }
+
+        function showQueue() {
+            let queueArea = document.getElementById("queueArea");
+            queueArea.value = "Cola:\n";
+            if (queue.length > 0) {
+                queue.forEach((element, index) => {
+                    queueArea.value += (index + 1) + ". " + element + "\n";
+                });
+            } else {
+                queueArea.value += "La cola está vacía.";
+            }
+        }
+
+        // =============================================
+        // Punto 8: Árbol Binario de Búsqueda
+        // =============================================
+        class NodoArbol {
+            constructor(valor) {
+                this.valor = valor;
+                this.izquierda = null;
+                this.derecha = null;
+            }
+        }
+
+        let raizArbol = null;
+
+        function insertarEnArbol() {
+            let valor = parseInt(document.getElementById("arbolValor").value);
+            if (isNaN(valor)) {
+                alert("Por favor ingrese un número válido.");
+                return;
+            }
+
+            raizArbol = insertarNodo(raizArbol, valor);
+            document.getElementById("arbolValor").value = "";
+            mostrarArbol();
+        }
+
+        function insertarNodo(nodo, valor) {
+            if (nodo === null) {
+                return new NodoArbol(valor);
+            }
+
+            if (valor < nodo.valor) {
+                nodo.izquierda = insertarNodo(nodo.izquierda, valor);
+            } else if (valor > nodo.valor) {
+                nodo.derecha = insertarNodo(nodo.derecha, valor);
+            }
+
+            return nodo;
+        }
+
+        function buscarEnArbol() {
+            let valor = parseInt(document.getElementById("arbolValor").value);
+            if (isNaN(valor)) {
+                alert("Por favor ingrese un número válido.");
+                return;
+            }
+
+            let encontrado = buscarNodo(raizArbol, valor);
+            alert(encontrado ? `El valor ${valor} está en el árbol.` : `El valor ${valor} no está en el árbol.`);
+        }
+
+        function buscarNodo(nodo, valor) {
+            if (nodo === null) {
+                return false;
+            }
+
+            if (valor === nodo.valor) {
+                return true;
+            }
+
+            return valor < nodo.valor 
+                ? buscarNodo(nodo.izquierda, valor) 
+                : buscarNodo(nodo.derecha, valor);
+        }
+
+        function mostrarArbol() {
+            let area = document.getElementById("arbolArea");
+            area.value = "Árbol Binario de Búsqueda (In-Order):\n";
+            
+            if (raizArbol === null) {
+                area.value += "El árbol está vacío.";
+                return;
+            }
+
+            let elementos = [];
+            inOrder(raizArbol, elementos);
+            area.value += elementos.join(", ");
+            
+            visualizarArbol();
+        }
+
+        function inOrder(nodo, elementos) {
+            if (nodo !== null) {
+                inOrder(nodo.izquierda, elementos);
+                elementos.push(nodo.valor);
+                inOrder(nodo.derecha, elementos);
+            }
+        }
+
+        function visualizarArbol() {
+            const container = document.getElementById("arbolVisual");
+            container.innerHTML = '';
+            
+            if (raizArbol === null) {
+                container.innerHTML = "<p>El árbol está vacío.</p>";
+                return;
+            }
+            
+            let queue = [{nodo: raizArbol, nivel: 0}];
+            let niveles = [];
+            
+            while (queue.length > 0) {
+                let current = queue.shift();
+                if (!niveles[current.nivel]) {
+                    niveles[current.nivel] = [];
+                }
+                niveles[current.nivel].push(current.nodo);
+                
+                if (current.nodo.izquierda) {
+                    queue.push({nodo: current.nodo.izquierda, nivel: current.nivel + 1});
+                }
+                if (current.nodo.derecha) {
+                    queue.push({nodo: current.nodo.derecha, nivel: current.nivel + 1});
+                }
+            }
+            
+            for (let i = 0; i < niveles.length; i++) {
+                let nivelDiv = document.createElement("div");
+                nivelDiv.style.textAlign = "center";
+                nivelDiv.style.margin = "10px 0";
+                
+                for (let j = 0; j < niveles[i].length; j++) {
+                    let nodoDiv = document.createElement("span");
+                    nodoDiv.className = "tree-node";
+                    nodoDiv.textContent = niveles[i][j].valor;
+                    nivelDiv.appendChild(nodoDiv);
+                    
+                    if (i < niveles.length - 1) {
+                        let lineDiv = document.createElement("span");
+                        lineDiv.className = "tree-line";
+                        nivelDiv.appendChild(lineDiv);
+                    }
+                }
+                
+                container.appendChild(nivelDiv);
+            }
+        }
+
+        // =============================================
+        // Punto 9: Cálculo de Profundidad de Árbol
+        // =============================================
+        function calcularProfundidad() {
+            let profundidad = obtenerProfundidad(raizArbol);
+            
+            if (raizArbol === null) {
+                document.getElementById("profundidadArea").value = 
+                    "El árbol está vacío. Por favor, inserte valores en el Punto 8 primero.";
+            } else {
+                document.getElementById("profundidadArea").value = 
+                    `La profundidad máxima del árbol es: ${profundidad}\n\n` +
+                    `(Árbol actual: ${obtenerElementosArbol()})`;
+            }
+        }
+
+        function obtenerProfundidad(nodo) {
+            if (nodo === null) {
+                return 0;
+            }
+
+            let profundidadIzquierda = obtenerProfundidad(nodo.izquierda);
+            let profundidadDerecha = obtenerProfundidad(nodo.derecha);
+
+            return Math.max(profundidadIzquierda, profundidadDerecha) + 1;
+        }
+
+        function obtenerElementosArbol() {
+            let elementos = [];
+            inOrder(raizArbol, elementos);
+            return elementos.join(", ");
+        }
+
+        function reiniciarArbol() {
+            raizArbol = null;
+            document.getElementById("arbolArea").value = "";
+            document.getElementById("profundidadArea").value = "";
+            document.getElementById("arbolVisual").innerHTML = "";
+        }
+
+        // =============================================
+        // Punto 10: Detector de Dependencias Circulares
+        // =============================================
+        let dependencias = {};
+
+        function agregarDependencia() {
+            const modulo = document.getElementById("modulo").value.trim().toUpperCase();
+            const dependenciaDe = document.getElementById("dependencia").value.trim().toUpperCase();
+            
+            if (!modulo || !dependenciaDe) {
+                mostrarResultado("Por favor ingresa ambos valores", "warning");
+                return;
+            }
+            
+            if (!dependencias[modulo]) {
+                dependencias[modulo] = [];
+            }
+            
+            if (dependencias[modulo].includes(dependenciaDe)) {
+                mostrarResultado("Esta dependencia ya fue agregada", "warning");
+                return;
+            }
+            
+            dependencias[modulo].push(dependenciaDe);
+            actualizarVisualizacion();
+            
+            document.getElementById("modulo").value = "";
+            document.getElementById("dependencia").value = "";
+            document.getElementById("modulo").focus();
+        }
+
+        function verificarCiclos() {
+            if (Object.keys(dependencias).length === 0) {
+                mostrarResultado("No hay dependencias para analizar", "info");
+                return;
+            }
+            
+            const tieneCiclo = detectarCiclos(dependencias);
+            
+            if (tieneCiclo) {
+                mostrarResultado("¡Se detectó un problema! Hay dependencias circulares.", "error");
+            } else {
+                mostrarResultado("✓ Todo correcto. No hay dependencias circulares.", "success");
+            }
+        }
+
+        function reiniciarGrafo() {
+            dependencias = {};
+            actualizarVisualizacion();
+            mostrarResultado("Se reiniciaron todas las dependencias", "info");
+        }
+
+        function mostrarResultado(mensaje, tipo) {
+            const resultadoDiv = document.getElementById("resultadoCiclos");
+            resultadoDiv.innerHTML = `<p style="margin: 0;">${mensaje}</p>`;
+            
+            resultadoDiv.className = "result-box";
+            
+            if (tipo === "error") {
+                resultadoDiv.classList.add("error");
+            } else if (tipo === "success") {
+                resultadoDiv.classList.add("success");
+            } else if (tipo === "warning") {
+                resultadoDiv.classList.add("warning");
+            } else {
+                resultadoDiv.classList.add("info");
+            }
+        }
+
+        function actualizarVisualizacion() {
+            const grafoDiv = document.getElementById("grafoVisual");
+            
+            if (Object.keys(dependencias).length === 0) {
+                grafoDiv.innerHTML = '<p style="color: #6c757d; margin: 0;">(Aún no hay dependencias agregadas)</p>';
+                return;
+            }
+            
+            let html = "";
+            for (const modulo in dependencias) {
+                html += `<div style="margin-bottom: 8px;">
+                            <strong>${modulo}</strong> depende de: 
+                            ${dependencias[modulo].join(", ")}
+                        </div>`;
+            }
+            grafoDiv.innerHTML = html;
+        }
+
+        function detectarCiclos(grafo) {
+            const visitados = {};
+            const enRecursion = {};
+            
+            for (const nodo in grafo) {
+                if (esCiclico(nodo, visitados, enRecursion, grafo)) {
+                    return true;
+                }
+            }
+            return false;
+            
+            function esCiclico(nodo, visitados, enRecursion, grafo) {
+                if (!visitados[nodo]) {
+                    visitados[nodo] = true;
+                    enRecursion[nodo] = true;
+                    
+                    const vecinos = grafo[nodo] || [];
+                    for (const vecino of vecinos) {
+                        if (!visitados[vecino] && esCiclico(vecino, visitados, enRecursion, grafo)) {
+                            return true;
+                        } else if (enRecursion[vecino]) {
+                            return true;
+                        }
+                    }
+                }
+                enRecursion[nodo] = false;
+                return false;
+            }
+        }
+
+        // =============================================
+        // Inicialización
+        // =============================================
+        window.onload = function() {
+            initGrid();
+            initAutoGrid();
+            
+            // Configurar eventos para los botones
+            document.getElementById("agregarBtn").addEventListener("click", agregarProducto);
+            document.getElementById("eliminarBtn").addEventListener("click", eliminarProducto);
+            document.getElementById("mostrarBtn").addEventListener("click", mostrarCarrito);
+            document.getElementById("agregarCorreoBtn").addEventListener("click", agregarCorreo);
+            document.getElementById("agregarContactoBtn").addEventListener("click", agregarContacto);
+            document.getElementById("buscarContactoBtn").addEventListener("click", buscarContacto);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pseudocódigo - Ruta Óptima con Dijkstra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Lobster&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Lobster', cursive;
+            font-size: 3.5rem;
+            margin: 2rem 0;
+            color: #ff9f43;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 900px;
+            width: 90%;
+        }
+
+        .content h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #ff9f43;
+            font-weight: 700;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff88;
+            padding: 1.5rem;
+            border-radius: 15px;
+            overflow-x: auto;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container {
+            margin-top: 2.5rem;
+        }
+
+        .button-container a {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-container a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .content h2 {
+                font-size: 1.8rem;
+            }
+
+            .content {
+                padding: 1.5rem;
+                margin: 1.5rem;
+            }
+
+            .button-container a {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pseudocódigo - Ruta Óptima con Dijkstra</h1>
+
+    <div class="content">
+        <h2>Algoritmo de Dijkstra</h2>
+        <pre>
+1. Generar un escenario:
+   a. Crear un tablero de tamaño NxN.
+   b. Colocar obstáculos aleatorios.
+   c. Seleccionar puntos de inicio y meta.
+
+2. Crear el grafo:
+   a. Para cada nodo, definir vecinos válidos.
+   b. Asignar pesos aleatorios a las aristas.
+
+3. Aplicar el algoritmo de Dijkstra:
+   a. Inicializar cola de prioridad, distancias y nodos previos.
+   b. Mientras haya nodos por visitar:
+      i. Seleccionar el nodo con la distancia mínima.
+      ii. Si es la meta, terminar.
+      iii. Para cada vecino, actualizar distancias y cola.
+
+4. Reconstruir el camino:
+   a. Desde la meta, seguir los nodos previos hasta el inicio.
+
+5. Visualizar resultados:
+   a. Mostrar el camino óptimo y los nodos visitados.
+   b. Graficar el escenario con obstáculos, inicio, meta y camino.
+        </pre>
+    </div>
+
+    <div class="button-container">
+        <a href="Index.html">Volver al Inicio</a>
+    </div>
+
+</body>
+</html>

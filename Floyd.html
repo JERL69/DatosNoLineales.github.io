@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritmo de Floyd-Warshall</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .exercise {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .exercise:hover {
+            transform: translateY(-5px);
+        }
+        .exercise h2 {
+            margin-top: 0;
+            color: #2980b9;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .graph-info {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-radius: 5px;
+            display: none;
+            border-left: 4px solid #2ecc71;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 15px 0;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .matrix-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .step-btn {
+            background-color: #f39c12;
+        }
+        .step-btn:hover {
+            background-color: #e67e22;
+        }
+        .visualization {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .node {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+            margin: 10px;
+            position: relative;
+        }
+        .edge {
+            position: absolute;
+            height: 3px;
+            background-color: #7f8c8d;
+            transform-origin: left center;
+            z-index: -1;
+        }
+        .edge-label {
+            position: absolute;
+            font-size: 12px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .highlight {
+            background-color: #f1c40f;
+            color: #2c3e50;
+        }
+        .highlight-edge {
+            background-color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Algoritmo de Floyd-Warshall - Ejercicios Interactivos</h1>
+    
+    <div class="exercise" id="exercise1">
+        <h2>Ejercicio 1: Red de Transporte Urbano</h2>
+        <div class="graph-info">
+            <p><strong>Nodos:</strong> Estaciones de metro (A, B, C, D)</p>
+            <p><strong>Arcos:</strong></p>
+            <ul>
+                <li>A → B = 5 min</li>
+                <li>B → C = 3 min</li>
+                <li>C → D = 2 min</li>
+                <li>A → D = 15 min</li>
+            </ul>
+            <p><strong>Pregunta:</strong> ¿Cuál es el tiempo mínimo para ir de A → D?</p>
+        </div>
+        
+        <div class="visualization" id="visual1">
+            <!-- Visualización del grafo -->
+        </div>
+        
+        <div class="controls">
+            <button onclick="solveExercise(1)">Resolver Ejercicio</button>
+            <button class="step-btn" onclick="showSteps(1)">Ver Pasos</button>
+        </div>
+        
+        <div class="result" id="result1"></div>
+        <div class="matrix-container" id="matrix1"></div>
+    </div>
+    
+    <div class="exercise" id="exercise2">
+        <h2>Ejercicio 2: Optimización de Rutas de Vuelos</h2>
+        <div class="graph-info">
+            <p><strong>Nodos:</strong> Ciudades (NY, Chicago, LA, Miami)</p>
+            <p><strong>Arcos:</strong></p>
+            <ul>
+                <li>NY → Chicago = 2 horas</li>
+                <li>Chicago → LA = 4 horas</li>
+                <li>LA → Miami = 5 horas</li>
+                <li>NY → Miami = 8 horas</li>
+            </ul>
+            <p><strong>Pregunta:</strong> ¿Cuál es la ruta más rápida de Nueva York a Miami?</p>
+        </div>
+        
+        <div class="visualization" id="visual2">
+            <!-- Visualización del grafo -->
+        </div>
+        
+        <div class="controls">
+            <button onclick="solveExercise(2)">Resolver Ejercicio</button>
+            <button class="step-btn" onclick="showSteps(2)">Ver Pasos</button>
+        </div>
+        
+        <div class="result" id="result2"></div>
+        <div class="matrix-container" id="matrix2"></div>
+    </div>
+    
+    <div class="exercise" id="exercise3">
+        <h2>Ejercicio 3: Red de Fibra Óptica</h2>
+        <div class="graph-info">
+            <p><strong>Nodos:</strong> Centros de datos (DC1, DC2, DC3, DC4)</p>
+            <p><strong>Arcos:</strong></p>
+            <ul>
+                <li>DC1 → DC2 = 10 ms</li>
+                <li>DC2 → DC3 = 5 ms</li>
+                <li>DC3 → DC4 = 8 ms</li>
+                <li>DC1 → DC4 = 30 ms</li>
+            </ul>
+            <p><strong>Pregunta:</strong> ¿Cuál es la latencia mínima entre DC1 y DC4?</p>
+        </div>
+        
+        <div class="visualization" id="visual3">
+            <!-- Visualización del grafo -->
+        </div>
+        
+        <div class="controls">
+            <button onclick="solveExercise(3)">Resolver Ejercicio</button>
+            <button class="step-btn" onclick="showSteps(3)">Ver Pasos</button>
+        </div>
+        
+        <div class="result" id="result3"></div>
+        <div class="matrix-container" id="matrix3"></div>
+    </div>
+    
+    <div class="exercise" id="exercise4">
+        <h2>Ejercicio 4: Sistema de Envío de Paquetes</h2>
+        <div class="graph-info">
+            <p><strong>Nodos:</strong> Almacenes (W1, W2, W3, W4)</p>
+            <p><strong>Arcos:</strong></p>
+            <ul>
+                <li>W1 → W2 = 2 días</li>
+                <li>W2 → W3 = 1 día</li>
+                <li>W3 → W4 = 3 días</li>
+                <li>W1 → W4 = 7 días</li>
+            </ul>
+            <p><strong>Pregunta:</strong> ¿Cuál es el tiempo mínimo de envío de W1 a W4?</p>
+        </div>
+        
+        <div class="visualization" id="visual4">
+            <!-- Visualización del grafo -->
+        </div>
+        
+        <div class="controls">
+            <button onclick="solveExercise(4)">Resolver Ejercicio</button>
+            <button class="step-btn" onclick="showSteps(4)">Ver Pasos</button>
+        </div>
+        
+        <div class="result" id="result4"></div>
+        <div class="matrix-container" id="matrix4"></div>
+    </div>
+    
+    <div class="exercise" id="exercise5">
+        <h2>Ejercicio 5: Red Social (Distancias entre usuarios)</h2>
+        <div class="graph-info">
+            <p><strong>Nodos:</strong> Usuarios (U1, U2, U3, U4)</p>
+            <p><strong>Arcos:</strong></p>
+            <ul>
+                <li>U1 → U2 = 1 conexión</li>
+                <li>U2 → U3 = 1 conexión</li>
+                <li>U3 → U4 = 1 conexión</li>
+                <li>U1 → U4 = 5 conexiones</li>
+            </ul>
+            <p><strong>Pregunta:</strong> ¿Cuál es la distancia mínima (menos intermediarios) entre U1 y U4?</p>
+        </div>
+        
+        <div class="visualization" id="visual5">
+            <!-- Visualización del grafo -->
+        </div>
+        
+        <div class="controls">
+            <button onclick="solveExercise(5)">Resolver Ejercicio</button>
+            <button class="step-btn" onclick="showSteps(5)">Ver Pasos</button>
+        </div>
+        
+        <div class="result" id="result5"></div>
+        <div class="matrix-container" id="matrix5"></div>
+    </div>
+
+    <script>
+        // Datos de los grafos para cada ejercicio
+        const graphs = {
+            1: {
+                nodes: ['A', 'B', 'C', 'D'],
+                edges: [
+                    { from: 'A', to: 'B', weight: 5 },
+                    { from: 'B', to: 'C', weight: 3 },
+                    { from: 'C', to: 'D', weight: 2 },
+                    { from: 'A', to: 'D', weight: 15 }
+                ]
+            },
+            2: {
+                nodes: ['NY', 'Chicago', 'LA', 'Miami'],
+                edges: [
+                    { from: 'NY', to: 'Chicago', weight: 2 },
+                    { from: 'Chicago', to: 'LA', weight: 4 },
+                    { from: 'LA', to: 'Miami', weight: 5 },
+                    { from: 'NY', to: 'Miami', weight: 8 }
+                ]
+            },
+            3: {
+                nodes: ['DC1', 'DC2', 'DC3', 'DC4'],
+                edges: [
+                    { from: 'DC1', to: 'DC2', weight: 10 },
+                    { from: 'DC2', to: 'DC3', weight: 5 },
+                    { from: 'DC3', to: 'DC4', weight: 8 },
+                    { from: 'DC1', to: 'DC4', weight: 30 }
+                ]
+            },
+            4: {
+                nodes: ['W1', 'W2', 'W3', 'W4'],
+                edges: [
+                    { from: 'W1', to: 'W2', weight: 2 },
+                    { from: 'W2', to: 'W3', weight: 1 },
+                    { from: 'W3', to: 'W4', weight: 3 },
+                    { from: 'W1', to: 'W4', weight: 7 }
+                ]
+            },
+            5: {
+                nodes: ['U1', 'U2', 'U3', 'U4'],
+                edges: [
+                    { from: 'U1', to: 'U2', weight: 1 },
+                    { from: 'U2', to: 'U3', weight: 1 },
+                    { from: 'U3', to: 'U4', weight: 1 },
+                    { from: 'U1', to: 'U4', weight: 5 }
+                ]
+            }
+        };
+
+        // Inicializar visualizaciones de grafos
+        document.addEventListener('DOMContentLoaded', function() {
+            for (let i = 1; i <= 5; i++) {
+                drawGraph(i);
+            }
+        });
+
+        // Dibujar grafo
+        function drawGraph(exerciseNum) {
+            const graph = graphs[exerciseNum];
+            const container = document.getElementById(`visual${exerciseNum}`);
+            container.innerHTML = '';
+            
+            const positions = calculateNodePositions(graph.nodes.length);
+            
+            // Dibujar nodos
+            graph.nodes.forEach((node, index) => {
+                const nodeElement = document.createElement('div');
+                nodeElement.className = 'node';
+                nodeElement.id = `node-${exerciseNum}-${node}`;
+                nodeElement.textContent = node;
+                nodeElement.style.left = `${positions[index].x}px`;
+                nodeElement.style.top = `${positions[index].y}px`;
+                container.appendChild(nodeElement);
+            });
+            
+            // Dibujar arcos
+            graph.edges.forEach(edge => {
+                const fromNode = document.getElementById(`node-${exerciseNum}-${edge.from}`);
+                const toNode = document.getElementById(`node-${exerciseNum}-${edge.to}`);
+                
+                if (fromNode && toNode) {
+                    const fromRect = fromNode.getBoundingClientRect();
+                    const toRect = toNode.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+                    
+                    const fromX = fromRect.left + fromRect.width/2 - containerRect.left;
+                    const fromY = fromRect.top + fromRect.height/2 - containerRect.top;
+                    const toX = toRect.left + toRect.width/2 - containerRect.left;
+                    const toY = toRect.top + toRect.height/2 - containerRect.top;
+                    
+                    // Calcular ángulo y distancia
+                    const dx = toX - fromX;
+                    const dy = toY - fromY;
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    // Crear arco
+                    const edgeElement = document.createElement('div');
+                    edgeElement.className = 'edge';
+                    edgeElement.id = `edge-${exerciseNum}-${edge.from}-${edge.to}`;
+                    edgeElement.style.width = `${distance}px`;
+                    edgeElement.style.left = `${fromX}px`;
+                    edgeElement.style.top = `${fromY}px`;
+                    edgeElement.style.transform = `rotate(${angle}deg)`;
+                    container.appendChild(edgeElement);
+                    
+                    // Etiqueta de peso
+                    const labelElement = document.createElement('div');
+                    labelElement.className = 'edge-label';
+                    labelElement.textContent = edge.weight;
+                    labelElement.style.left = `${fromX + dx/2 - 10}px`;
+                    labelElement.style.top = `${fromY + dy/2 - 10}px`;
+                    container.appendChild(labelElement);
+                }
+            });
+            
+            // Ajustar altura del contenedor
+            container.style.height = '250px';
+        }
+
+        // Calcular posiciones de nodos en círculo
+        function calculateNodePositions(count) {
+            const radius = 80;
+            const center = { x: 150, y: 100 };
+            const positions = [];
+            
+            for (let i = 0; i < count; i++) {
+                const angle = (i * (2 * Math.PI / count)) - Math.PI/2;
+                positions.push({
+                    x: center.x + radius * Math.cos(angle),
+                    y: center.y + radius * Math.sin(angle)
+                });
+            }
+            
+            return positions;
+        }
+
+        // Implementación del algoritmo de Floyd-Warshall
+        function floydWarshall(graph) {
+            const nodes = graph.nodes;
+            const n = nodes.length;
+            
+            // Inicializar matriz de distancias
+            const dist = {};
+            const next = {}; // Para reconstruir caminos
+            nodes.forEach(u => {
+                dist[u] = {};
+                next[u] = {};
+                nodes.forEach(v => {
+                    if (u === v) {
+                        dist[u][v] = 0;
+                        next[u][v] = null;
+                    } else {
+                        dist[u][v] = Infinity;
+                        next[u][v] = null;
+                    }
+                });
+            });
+            
+            // Llenar con arcos existentes
+            graph.edges.forEach(edge => {
+                dist[edge.from][edge.to] = edge.weight;
+                next[edge.from][edge.to] = edge.to;
+            });
+            
+            // Algoritmo principal
+            for (let k = 0; k < n; k++) {
+                const nodeK = nodes[k];
+                for (let i = 0; i < n; i++) {
+                    const nodeI = nodes[i];
+                    for (let j = 0; j < n; j++) {
+                        const nodeJ = nodes[j];
+                        if (dist[nodeI][nodeJ] > dist[nodeI][nodeK] + dist[nodeK][nodeJ]) {
+                            dist[nodeI][nodeJ] = dist[nodeI][nodeK] + dist[nodeK][nodeJ];
+                            next[nodeI][nodeJ] = next[nodeI][nodeK];
+                        }
+                    }
+                }
+            }
+            
+            return { distances: dist, next: next };
+        }
+
+        // Reconstruir camino desde la matriz next
+        function reconstructPath(next, start, end) {
+            if (next[start][end] === null) return [];
+            
+            const path = [start];
+            let current = start;
+            
+            while (current !== end) {
+                current = next[current][end];
+                path.push(current);
+            }
+            
+            return path;
+        }
+
+        // Resolver ejercicio completo
+        function solveExercise(exerciseNum) {
+            const graph = graphs[exerciseNum];
+            const { distances, next } = floydWarshall(graph);
+            const resultElement = document.getElementById(`result${exerciseNum}`);
+            const matrixElement = document.getElementById(`matrix${exerciseNum}`);
+            
+            // Mostrar matriz de distancias
+            displayMatrix(matrixElement, distances, graph.nodes);
+            
+            // Determinar nodos de interés según el ejercicio
+            let fromNode, toNode;
+            switch(exerciseNum) {
+                case 1: fromNode = 'A'; toNode = 'D'; break;
+                case 2: fromNode = 'NY'; toNode = 'Miami'; break;
+                case 3: fromNode = 'DC1'; toNode = 'DC4'; break;
+                case 4: fromNode = 'W1'; toNode = 'W4'; break;
+                case 5: fromNode = 'U1'; toNode = 'U4'; break;
+            }
+            
+            // Reconstruir camino
+            const path = reconstructPath(next, fromNode, toNode);
+            const pathStr = path.join(' → ');
+            
+            // Mostrar resultado
+            let resultText = `La distancia mínima de ${fromNode} → ${toNode} es ${distances[fromNode][toNode]}.<br>`;
+            resultText += `Ruta: ${pathStr}`;
+            
+            resultElement.innerHTML = resultText;
+            resultElement.style.display = 'block';
+            
+            // Resaltar nodos y arcos en la visualización
+            highlightPath(exerciseNum, path);
+        }
+
+        // Mostrar pasos del algoritmo
+        function showSteps(exerciseNum) {
+            const graph = graphs[exerciseNum];
+            const nodes = graph.nodes;
+            const n = nodes.length;
+            
+            // Inicializar matriz de distancias
+            let dist = {};
+            nodes.forEach(u => {
+                dist[u] = {};
+                nodes.forEach(v => {
+                    if (u === v) {
+                        dist[u][v] = 0;
+                    } else {
+                        dist[u][v] = Infinity;
+                    }
+                });
+            });
+            
+            // Llenar con arcos existentes
+            graph.edges.forEach(edge => {
+                dist[edge.from][edge.to] = edge.weight;
+            });
+            
+            const matrixElement = document.getElementById(`matrix${exerciseNum}`);
+            const resultElement = document.getElementById(`result${exerciseNum}`);
+            
+            resultElement.innerHTML = '<strong>Ejecutando algoritmo paso a paso:</strong>';
+            resultElement.style.display = 'block';
+            
+            matrixElement.innerHTML = '<p>Matriz inicial:</p>';
+            displayMatrix(matrixElement, dist, nodes);
+            
+            // Ejecutar algoritmo paso a paso
+            for (let k = 0; k < n; k++) {
+                const nodeK = nodes[k];
+                
+                setTimeout(() => {
+                    // Resaltar nodo intermedio actual
+                    highlightNode(exerciseNum, nodeK);
+                    
+                    for (let i = 0; i < n; i++) {
+                        const nodeI = nodes[i];
+                        for (let j = 0; j < n; j++) {
+                            const nodeJ = nodes[j];
+                            
+                            if (dist[nodeI][nodeJ] > dist[nodeI][nodeK] + dist[nodeK][nodeJ]) {
+                                // Resaltar arco que se está actualizando
+                                highlightEdge(exerciseNum, nodeI, nodeJ);
+                                
+                                // Actualizar distancia
+                                dist[nodeI][nodeJ] = dist[nodeI][nodeK] + dist[nodeK][nodeJ];
+                                
+                                // Mostrar matriz actualizada
+                                setTimeout(() => {
+                                    matrixElement.innerHTML += `<p>Actualizando usando nodo intermedio ${nodeK}:</p>`;
+                                    displayMatrix(matrixElement, dist, nodes);
+                                }, 500);
+                            }
+                        }
+                    }
+                }, k * 2000);
+            }
+        }
+
+        // Mostrar matriz en formato tabla
+        function displayMatrix(container, matrix, nodes) {
+            const table = document.createElement('table');
+            
+            // Encabezados
+            const headerRow = document.createElement('tr');
+            headerRow.appendChild(document.createElement('th'));
+            nodes.forEach(node => {
+                const th = document.createElement('th');
+                th.textContent = node;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+            
+            // Filas de datos
+            nodes.forEach(nodeI => {
+                const row = document.createElement('tr');
+                const headerCell = document.createElement('th');
+                headerCell.textContent = nodeI;
+                row.appendChild(headerCell);
+                
+                nodes.forEach(nodeJ => {
+                    const cell = document.createElement('td');
+                    cell.textContent = matrix[nodeI][nodeJ] === Infinity ? '∞' : matrix[nodeI][nodeJ];
+                    row.appendChild(cell);
+                });
+                
+                table.appendChild(row);
+            });
+            
+            container.appendChild(table);
+        }
+
+        // Resaltar nodo en la visualización
+        function highlightNode(exerciseNum, node) {
+            const nodeElement = document.getElementById(`node-${exerciseNum}-${node}`);
+            if (nodeElement) {
+                nodeElement.classList.add('highlight');
+                setTimeout(() => {
+                    nodeElement.classList.remove('highlight');
+                }, 1500);
+            }
+        }
+
+        // Resaltar arco en la visualización
+        function highlightEdge(exerciseNum, fromNode, toNode) {
+            const edgeElement = document.getElementById(`edge-${exerciseNum}-${fromNode}-${toNode}`);
+            if (edgeElement) {
+                edgeElement.classList.add('highlight-edge');
+                setTimeout(() => {
+                    edgeElement.classList.remove('highlight-edge');
+                }, 1500);
+            }
+        }
+
+        // Resaltar camino completo
+        function highlightPath(exerciseNum, path) {
+            for (let i = 0; i < path.length - 1; i++) {
+                const fromNode = path[i];
+                const toNode = path[i+1];
+                
+                // Resaltar nodos
+                const fromElement = document.getElementById(`node-${exerciseNum}-${fromNode}`);
+                const toElement = document.getElementById(`node-${exerciseNum}-${toNode}`);
+                if (fromElement) fromElement.classList.add('highlight');
+                if (toElement) toElement.classList.add('highlight');
+                
+                // Resaltar arcos
+                highlightEdge(exerciseNum, fromNode, toNode);
+            }
+        }
+    </script>
+</body>
+</html>

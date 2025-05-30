@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Interactivo de Autómatas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --easy: #2ecc71;
+            --medium: #f39c12;
+            --hard: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #search-input {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            width: 70%;
+            font-size: 1rem;
+        }
+
+        #search-btn {
+            padding: 0 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #search-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .controls button {
+            padding: 0.6rem 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .controls button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #difficulty-filter {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .ejercicio-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ejercicio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .difficulty-label {
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .easy {
+            background-color: var(--easy);
+            border-color: var(--easy);
+        }
+
+        .medium {
+            background-color: var(--medium);
+            border-color: var(--medium);
+        }
+
+        .hard {
+            background-color: var(--hard);
+            border-color: var(--hard);
+        }
+
+        .ejercicio-card h2 {
+            color: var(--secondary);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .ver-detalles {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .ver-detalles:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .ver-detalles i {
+            transition: transform 0.3s;
+        }
+
+        .ver-detalles.active i {
+            transform: rotate(180deg);
+        }
+
+        .detalles {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            background-color: var(--light);
+            border-radius: 4px;
+            margin-top: 0;
+        }
+
+        .detalles.active {
+            max-height: 1000px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+        }
+
+        .simulator {
+            background-color: var(--light);
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .simulator-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .simulator-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--light);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .simulator-section h3 {
+            margin-top: 0;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .visualization {
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 6px;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .state {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light);
+            border: 2px solid var(--dark);
+            text-align: center;
+            line-height: 50px;
+            margin: 0.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .state.active {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .state.initial::before {
+            content: "→";
+            position: absolute;
+            left: -25px;
+            top: 15px;
+            font-size: 1.2rem;
+        }
+
+        .state.final {
+            border: 3px double var(--dark);
+        }
+
+        .tape {
+            display: flex;
+            margin: 1rem 0;
+        }
+
+        .tape-cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .tape-cell.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tape-cell.pointer::after {
+            content: "↓";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--danger);
+        }
+
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success);
+            display: block;
+        }
+
+        .error {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--danger);
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 700px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        #start-exercise {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        #start-exercise:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #back-to-top:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .modal-content {
+                width: 90%;
+                margin: 2rem auto;
+            }
+            .simulator-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Simulador Interactivo de Autómatas</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Buscar ejercicios...">
+            <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <div class="filter">
+                <label for="difficulty-filter">Filtrar por dificultad:</label>
+                <select id="difficulty-filter">
+                    <option value="all">Todas las dificultades</option>
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Medio</option>
+                    <option value="hard">Difícil</option>
+                </select>
+            </div>
+            <button id="expand-all">Expandir Todos</button>
+            <button id="collapse-all">Colapsar Todos</button>
+        </div>
+
+        <div id="exercise-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">×</span>
+                <h2 id="modal-title"></h2>
+                <div id="modal-content"></div>
+                <button id="start-exercise">Iniciar Ejercicio</button>
+            </div>
+        </div>
+
+        <!-- Ejercicio 1: Validador de Contraseñas con un Autómata en Estado Finito (DFA) -->
+        <div class="exercise ejercicio-card easy">
+            <div class="card-header">
+                <h2>Ejercicio 1: Validador de Contraseñas con un Autómata en Estado Finito (DFA)</h2>
+                <span class="difficulty-label easy">Fácil</span>
+            </div>
+            <p>Autómata que valida si una contraseña cumple con requisitos básicos (mínimo 8 caracteres, mayúscula, número y carácter especial).</p>
+            <button class="ver-detalles" data-ejercicio="password"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-password" class="detalles">
+                <p>Este ejercicio revisa si tu contraseña es segura. Necesitas al menos 8 caracteres, una letra mayúscula, un número y un símbolo especial (como ! o @).</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe tu contraseña (ejemplo: "P@ssw0rd") en el cuadro de texto de abajo.</li>
+                    <li><strong>Paso 2:</strong> Haz clic en el botón "Validar" para ver si cumple las reglas.</li>
+                    <li><strong>Paso 3:</strong> Mira los círculos de colores: si el último círculo verde aparece, tu contraseña es válida.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="password-input" placeholder="Ingresa una contraseña">
+                    <button id="validate-btn">Validar</button>
+                </div>
+                <div class="visualization" id="password-visualization">
+                    <div class="state initial" id="state-p0">S0</div>
+                    <div class="state" id="state-p1">S1</div>
+                    <div class="state" id="state-p2">S2</div>
+                    <div class="state" id="state-p3">S3</div>
+                    <div class="state" id="state-p4">S4</div>
+                    <div class="state" id="state-p5">S5</div>
+                    <div class="state final" id="state-p6">S6</div>
+                </div>
+                <div class="result" id="password-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 2: Simulador de un Compilador Léxico (Analizador Léxico) -->
+        <div class="exercise ejercicio-card medium">
+            <div class="card-header">
+                <h2>Ejercicio 2: Simulador de un Compilador Léxico (Analizador Léxico)</h2>
+                <span class="difficulty-label medium">Medio</span>
+            </div>
+            <p>Autómata que tokeniza un código simple en palabras clave, identificadores, números y operadores.</p>
+            <button class="ver-detalles" data-ejercicio="lexer"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-lexer" class="detalles">
+                <p>Este ejercicio separa un texto como 'let x = 42 + y' en partes como palabras clave (let), nombres (x, y), números (42) y signos (+, =).</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe un texto como 'let x = 42 + y' en el cuadro de texto.</li>
+                    <li><strong>Paso 2:</strong> Haz clic en "Tokenizar" para que el programa lo separe.</li>
+                    <li><strong>Paso 3:</strong> Mira la cinta abajo para ver las partes separadas.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="lexer-input" placeholder="Ej: let x = 42 + y">
+                    <button id="run-lexer">Tokenizar</button>
+                </div>
+                <div class="visualization" id="lexer-visualization">
+                    <div class="tape" id="lexer-tape"></div>
+                </div>
+                <div class="result" id="lexer-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 3: Autómata para Reconocimiento de Lenguajes Regulares Complejos -->
+        <div class="exercise ejercicio-card medium">
+            <div class="card-header">
+                <h2>Ejercicio 3: Autómata para Reconocimiento de Lenguajes Regulares Complejos</h2>
+                <span class="difficulty-label medium">Medio</span>
+            </div>
+            <p>DFA que reconoce cadenas con un número par de 'a' y 'b'.</p>
+            <button class="ver-detalles" data-ejercicio="complex-regex"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-complex-regex" class="detalles">
+                <p>Este ejercicio cuenta las letras 'a' y 'b' en una palabra. Si ambas aparecen un número par de veces, es válida.</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe una palabra con solo 'a' y 'b' (ejemplo: 'aabb').</li>
+                    <li><strong>Paso 2:</strong> Haz clic en "Verificar" para comprobar.</li>
+                    <li><strong>Paso 3:</strong> Mira los círculos: si el último círculo verde aparece, la palabra es válida.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="complex-regex-input" placeholder="Ej: aabb">
+                    <button id="check-complex-regex">Verificar</button>
+                </div>
+                <div class="visualization" id="complex-regex-visualization">
+                    <div class="state initial" id="state-cr0">PP</div>
+                    <div class="state" id="state-cr1">PI</div>
+                    <div class="state" id="state-cr2">IP</div>
+                    <div class="state final" id="state-cr3">II</div>
+                </div>
+                <div class="result" id="complex-regex-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 4: Autómata para la Verificación de Balance de Paréntesis -->
+        <div class="exercise ejercicio-card hard">
+            <div class="card-header">
+                <h2>Ejercicio 4: Autómata para la Verificación de Balance de Paréntesis</h2>
+                <span class="difficulty-label hard">Difícil</span>
+            </div>
+            <p>Autómata de pila que valida si una secuencia de paréntesis está balanceada.</p>
+            <button class="ver-detalles" data-ejercicio="parens"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-parens" class="detalles">
+                <p>Este ejercicio revisa si los paréntesis ( y ) están bien puestos, como en '(())'.</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe una secuencia como '(())' en el cuadro de texto.</li>
+                    <li><strong>Paso 2:</strong> Haz clic en "Verificar" para comprobar.</li>
+                    <li><strong>Paso 3:</strong> Mira la cinta y la pila: si dice 'Paréntesis balanceados', está correcto.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="parens-input" placeholder="Ej: (())()">
+                    <button id="check-parens">Verificar</button>
+                </div>
+                <div class="visualization" id="parens-visualization">
+                    <div class="tape" id="parens-tape"></div>
+                    <div>Pila: <span id="parens-stack">ε</span></div>
+                </div>
+                <div class="result" id="parens-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 5: Simulador de una Máquina de Turing -->
+        <div class="exercise ejercicio-card hard">
+            <div class="card-header">
+                <h2>Ejercicio 5: Simulador de una Máquina de Turing</h2>
+                <span class="difficulty-label hard">Difícil</span>
+            </div>
+            <p>Simulación de una máquina de Turing que suma dos números binarios.</p>
+            <button class="ver-detalles" data-ejercicio="turing"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-turing" class="detalles">
+                <p>Este ejercicio suma dos números binarios (como 101 + 110). Usa solo 0 y 1.</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe el primer número binario (ejemplo: 101) en el primer cuadro de texto.</li>
+                    <li><strong>Paso 2:</strong> Escribe el segundo número binario (ejemplo: 110) en el segundo cuadro de texto.</li>
+                    <li><strong>Paso 3:</strong> Haz clic en el botón "Sumar" y espera a que la cinta muestre el resultado (ejemplo: 1011).</li>
+                    <li><strong>Paso 4:</strong> Mira el resultado en la parte de abajo; te dirá el número binario y su valor en decimal.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="turing-input1" placeholder="Primer número" value="101" pattern="[01]+">
+                    <input type="text" id="turing-input2" placeholder="Segundo número" value="110" pattern="[01]+">
+                    <button id="run-turing">Sumar</button>
+                </div>
+                <div class="visualization">
+                    <div class="tape" id="turing-tape"></div>
+                    <div>Estado: <span id="turing-state">q0</span></div>
+                </div>
+                <div class="result" id="turing-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 6: Simulador de Red de Petri -->
+        <div class="exercise ejercicio-card hard">
+            <div class="card-header">
+                <h2>Ejercicio 6: Simulador de Red de Petri</h2>
+                <span class="difficulty-label hard">Difícil</span>
+            </div>
+            <p>Simula un sistema de semáforos con una red de Petri.</p>
+            <button class="ver-detalles" data-ejercicio="petri"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-petri" class="detalles">
+                <p>Este ejercicio simula un semáforo que cambia entre rojo, amarillo y verde.</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Haz clic en "Siguiente Estado" para cambiar el semáforo.</li>
+                    <li><strong>Paso 2:</strong> Mira el círculo que se pone verde para ver el color actual.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <button id="run-petri">Siguiente Estado</button>
+                </div>
+                <div class="visualization" id="petri-visualization">
+                    <div class="state initial" id="state-pet0">Rojo</div>
+                    <div class="state" id="state-pet1">Amarillo</div>
+                    <div class="state" id="state-pet2">Verde</div>
+                </div>
+                <div class="result" id="petri-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 7: Autómata para el Reconocimiento de Idiomas Contextuales -->
+        <div class="exercise ejercicio-card hard">
+            <div class="card-header">
+                <h2>Ejercicio 7: Autómata para el Reconocimiento de Idiomas Contextuales</h2>
+                <span class="difficulty-label hard">Difícil</span>
+            </div>
+            <p>Valida expresiones algebraicas como 'a + b * c' usando un autómata de pila.</p>
+            <button class="ver-detalles" data-ejercicio="pda"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-pda" class="detalles">
+                <p>Este ejercicio revisa si una fórmula como 'a + b * c' está bien escrita usando letras, signos (+, *, etc.) y paréntesis.</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe una fórmula como 'a+b*c' o '(a+b)*c' en el cuadro de texto (puedes usar espacios o no).</li>
+                    <li><strong>Paso 2:</strong> Haz clic en el botón "Verificar" para que el programa la analice.</li>
+                    <li><strong>Paso 3:</strong> Mira la pila y el resultado: si dice 'Expresión válida', está correcta.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="pda-input" placeholder="Ej: a + b * c">
+                    <button id="run-pda">Verificar</button>
+                </div>
+                <div class="visualization" id="pda-visualization">
+                    <div class="tape" id="pda-tape"></div>
+                    <div>Pila: <span id="pda-stack">ε</span></div>
+                </div>
+                <div class="result" id="pda-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 8 y 9: Simulador de Control de Robot Móvil y Circuito Digital -->
+        <div class="exercise ejercicio-card hard">
+            <div class="card-header">
+                <h2>Ejercicio 8 y 9: Simulador de Control de Robot Móvil y Circuito Digital</h2>
+                <span class="difficulty-label hard">Difícil</span>
+            </div>
+            <p>Combina un DFA que controla un robot móvil en un ambiente 2D con obstáculos y un simulador de flip-flop D que actualiza la salida Q.</p>
+            <button class="ver-detalles" data-ejercicio="robot-flipflop"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-robot-flipflop" class="detalles">
+                <p>Este ejercicio simula un robot móvil y un flip-flop D en un solo canvas. El robot se puede mover con las teclas de flecha, y el flip-flop actualiza su estado con las entradas D y Reloj.</p>
+                <ul>
+                    <li><strong>Robot Móvil:</strong></li>
+                    <li>Paso 1: Escribe 0 (sin obstáculos) o 1 (con obstáculos) en el cuadro "Sensor".</li>
+                    <li>Paso 2: Usa las teclas de flecha para mover el robot (arriba, abajo, izquierda, derecha).</li>
+                    <li>Paso 3: Si hay un obstáculo (sensor=1), el robot no podrá avanzar en esa dirección.</li>
+                    <li><strong>Flip-Flop D:</strong></li>
+                    <li>Paso 4: Escribe 0 o 1 en el cuadro "D" (valor a guardar).</li>
+                    <li>Paso 5: Escribe 0 o 1 en el cuadro "Reloj" (activa el cambio).</li>
+                    <li>Paso 6: Haz clic en "Ejecutar Flip-Flop" para ver el estado Q en la parte inferior del canvas.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="robot-input" placeholder="Sensor (0=libre, 1=obstáculo)">
+                    <input type="text" id="flipflop-d" placeholder="D (0 o 1)">
+                    <input type="text" id="flipflop-clock" placeholder="Reloj (0 o 1)">
+                    <button id="run-flipflop">Ejecutar Flip-Flop</button>
+                </div>
+                <div class="visualization" id="robot-flipflop-visualization"></div>
+                <div class="result" id="robot-flipflop-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 10: Generador de Lenguajes Regulares -->
+        <div class="exercise ejercicio-card medium">
+            <div class="card-header">
+                <h2>Ejercicio 10: Generador de Lenguajes Regulares</h2>
+                <span class="difficulty-label medium">Medio</span>
+            </div>
+            <p>Genera números de teléfono válidos en el formato ###-###-####.</p>
+            <button class="ver-detalles" data-ejercicio="generator"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-generator" class="detalles">
+                <p>Este ejercicio crea un número de teléfono aleatorio como 123-456-7890.</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Haz clic en "Generar" para crear un número.</li>
+                    <li><strong>Paso 2:</strong> Mira la cinta para ver el número generado.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <button id="run-generator">Generar</button>
+                </div>
+                <div class="visualization" id="generator-visualization">
+                    <div class="tape" id="generator-tape"></div>
+                </div>
+                <div class="result" id="generator-result"></div>
+            </div>
+        </div>
+
+        <!-- Ejercicio 11: Reconocedor de Patrón en Datos de Sensor -->
+        <div class="exercise ejercicio-card medium">
+            <div class="card-header">
+                <h2>Ejercicio 11: Reconocedor de Patrón en Datos de Sensor</h2>
+                <span class="difficulty-label medium">Medio</span>
+            </div>
+            <p>Detecta si una secuencia de temperaturas es estrictamente creciente.</p>
+            <button class="ver-detalles" data-ejercicio="sensor"><span class="btn-text">Ver detalles</span> <i class="fas fa-chevron-down"></i></button>
+            <div id="detalles-sensor" class="detalles">
+                <p>Este ejercicio revisa si una lista de números (como temperaturas) va subiendo (ejemplo: 20,21,22).</p>
+                <ul>
+                    <li><strong>Paso 1:</strong> Escribe números separados por comas (ejemplo: 20,21,22,23).</li>
+                    <li><strong>Paso 2:</strong> Haz clic en "Verificar" para comprobar.</li>
+                    <li><strong>Paso 3:</strong> Mira el resultado: si dice 'Patrón creciente', está bien.</li>
+                </ul>
+            </div>
+            <div class="simulator">
+                <div class="controls">
+                    <input type="text" id="sensor-input" placeholder="Ej: 20,21,22,23">
+                    <button id="run-sensor">Verificar</button>
+                </div>
+                <div class="visualization" id="sensor-visualization">
+                    <div class="tape" id="sensor-tape"></div>
+                </div>
+                <div class="result" id="sensor-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <button id="back-to-top" title="Volver arriba"><i class="fas fa-arrow-up"></i></button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const botonesDetalles = document.querySelectorAll('.ver-detalles');
+            const expandAllBtn = document.getElementById('expand-all');
+            const collapseAllBtn = document.getElementById('collapse-all');
+            const difficultyFilter = document.getElementById('difficulty-filter');
+            const searchInput = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+            const backToTopBtn = document.getElementById('back-to-top');
+            const modal = document.getElementById('exercise-modal');
+            const closeModal = document.querySelector('.close-modal');
+            const startExerciseBtn = document.getElementById('start-exercise');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            // Función para mostrar/ocultar detalles
+            function toggleDetails(button) {
+                const numEjercicio = button.getAttribute('data-ejercicio');
+                const detalles = document.getElementById(`detalles-${numEjercicio}`);
+                
+                detalles.classList.toggle('active');
+                button.classList.toggle('active');
+                
+                if (detalles.classList.contains('active')) {
+                    button.querySelector('.btn-text').textContent = 'Ocultar detalles';
+                } else {
+                    button.querySelector('.btn-text').textContent = 'Ver detalles';
+                }
+            }
+
+            // Event listeners para los botones de detalles
+            botonesDetalles.forEach(button => {
+                button.addEventListener('click', function() {
+                    toggleDetails(this);
+                });
+                
+                // Doble click abre el modal con más información
+                button.addEventListener('dblclick', function() {
+                    const numEjercicio = this.getAttribute('data-ejercicio');
+                    const card = this.closest('.ejercicio-card');
+                    const title = card.querySelector('h2').textContent;
+                    const description = card.querySelector('p').textContent;
+                    const details = document.getElementById(`detalles-${numEjercicio}`).innerHTML;
+                    
+                    modalTitle.textContent = title;
+                    modalContent.innerHTML = `
+                        <p><strong>Descripción:</strong> ${description}</p>
+                        <div class="modal-details">
+                            <h3>Detalles completos:</h3>
+                            ${details}
+                        </div>
+                    `;
+                    
+                    modal.style.display = 'block';
+                });
+            });
+
+            // Expandir todos los detalles
+            expandAllBtn.addEventListener('click', function() {
+                botonesDetalles.forEach(button => {
+                    const detalles = document.getElementById(`detalles-${button.getAttribute('data-ejercicio')}`);
+                    if (!detalles.classList.contains('active')) {
+                        toggleDetails(button);
+                    }
+                });
+            });
+
+            // Colapsar todos los detalles
+            collapseAllBtn.addEventListener('click', function() {
+                botonesDetalles.forEach(button => {
+                    const detalles = document.getElementById(`detalles-${button.getAttribute('data-ejercicio')}`);
+                    if (detalles.classList.contains('active')) {
+                        toggleDetails(button);
+                    }
+                });
+            });
+
+            // Filtrar por dificultad
+            difficultyFilter.addEventListener('change', function() {
+                const difficulty = this.value;
+                const cards = document.querySelectorAll('.ejercicio-card');
+                
+                cards.forEach(card => {
+                    if (difficulty === 'all' || card.classList.contains(difficulty)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Buscar ejercicios
+            searchBtn.addEventListener('click', searchExercises);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchExercises();
+                }
+            });
+
+            function searchExercises() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const cards = document.querySelectorAll('.ejercicio-card');
+                
+                cards.forEach(card => {
+                    const title = card.querySelector('h2').textContent.toLowerCase();
+                    const description = card.querySelector('p').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            // Botón volver arriba
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Modal
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            startExerciseBtn.addEventListener('click', function() {
+                alert('¡Ejercicio iniciado! Aquí comenzaría la implementación práctica.');
+                modal.style.display = 'none';
+            });
+
+            // Efecto de carga inicial
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+
+            // Función auxiliar para resetear estados visuales
+            function resetStates(states) {
+                states.forEach(state => {
+                    state.classList.remove('active');
+                });
+            }
+
+            // Ejercicio 1: Validador de Contraseñas
+            const passwordInput = document.getElementById('password-input');
+            const validateBtn = document.getElementById('validate-btn');
+            const passwordResult = document.getElementById('password-result');
+            const passwordStates = [
+                document.getElementById('state-p0'),
+                document.getElementById('state-p1'),
+                document.getElementById('state-p2'),
+                document.getElementById('state-p3'),
+                document.getElementById('state-p4'),
+                document.getElementById('state-p5'),
+                document.getElementById('state-p6')
+            ];
+
+            validateBtn.addEventListener('click', function() {
+                const password = passwordInput.value;
+                resetStates(passwordStates);
+                passwordResult.className = 'result';
+                
+                let state = 0;
+                let hasUpper = false;
+                let hasNumber = false;
+                let hasSpecial = false;
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i >= password.length) {
+                        clearInterval(interval);
+                        const isValid = password.length >= 8 && hasUpper && hasNumber && hasSpecial;
+                        if (isValid) {
+                            passwordStates[6].classList.add('active');
+                            passwordResult.textContent = '✓ Contraseña válida';
+                            passwordResult.className = 'result success';
+                        } else {
+                            passwordResult.textContent = '✗ Contraseña inválida. Debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.';
+                            passwordResult.className = 'result error';
+                        }
+                        return;
+                    }
+                    
+                    resetStates(passwordStates);
+                    const char = password[i];
+                    
+                    if (char.match(/[A-Z]/)) hasUpper = true;
+                    if (char.match(/[0-9]/)) hasNumber = true;
+                    if (char.match(/[!@#$%^&*]/)) hasSpecial = true;
+                    
+                    if (state === 0) state = 1;
+                    else if (state === 1 && password.length >= 8) state = 2;
+                    else if (state === 2 && hasUpper) state = 3;
+                    else if (state === 3 && hasNumber) state = 4;
+                    else if (state === 4 && hasSpecial) state = 5;
+                    else if (state === 5 && hasUpper && hasNumber && hasSpecial) state = 6;
+                    
+                    passwordStates[state].classList.add('active');
+                    i++;
+                }, 500);
+            });
+
+            // Ejercicio 2: Simulador de Analizador Léxico
+            const lexerInput = document.getElementById('lexer-input');
+            const runLexerBtn = document.getElementById('run-lexer');
+            const lexerResult = document.getElementById('lexer-result');
+            const lexerTape = document.getElementById('lexer-tape');
+
+            runLexerBtn.addEventListener('click', function() {
+                const input = lexerInput.value;
+                lexerResult.className = 'result';
+                
+                const tokens = tokenize(input);
+                
+                lexerTape.innerHTML = '';
+                tokens.forEach(token => {
+                    const cell = document.createElement('div');
+                    cell.className = 'tape-cell';
+                    cell.textContent = token.value;
+                    lexerTape.appendChild(cell);
+                });
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    const cells = lexerTape.querySelectorAll('.tape-cell');
+                    cells.forEach(c => c.classList.remove('active', 'pointer'));
+                    if (i < cells.length) {
+                        cells[i].classList.add('active', 'pointer');
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        lexerResult.textContent = `✓ Tokens: ${JSON.stringify(tokens, null, 2)}`;
+                        lexerResult.className = 'result success';
+                    }
+                }, 500);
+            });
+
+            function tokenize(input) {
+                const tokens = [];
+                const regex = /\s*(let|if|=|\+|-|\*|\w+|[0-9]+|\(|\))\s*/g;
+                let match;
+                while ((match = regex.exec(input)) !== null) {
+                    const token = match[0].trim();
+                    if (token) {
+                        if (/let|if/.test(token)) tokens.push({ type: 'palabra_clave', value: token });
+                        else if (/[0-9]+/.test(token)) tokens.push({ type: 'número', value: token });
+                        else if (/\+|-|\*/.test(token)) tokens.push({ type: 'operador', value: token });
+                        else if (/[a-zA-Z]+/.test(token)) tokens.push({ type: 'identificador', value: token });
+                        else if (/\(|\)/.test(token)) tokens.push({ type: 'paréntesis', value: token });
+                    }
+                }
+                return tokens;
+            }
+
+            // Ejercicio 3: Autómata para Reconocimiento de Lenguajes Regulares Complejos
+            const complexRegexInput = document.getElementById('complex-regex-input');
+            const checkComplexRegexBtn = document.getElementById('check-complex-regex');
+            const complexRegexResult = document.getElementById('complex-regex-result');
+            const complexRegexStates = [
+                document.getElementById('state-cr0'),
+                document.getElementById('state-cr1'),
+                document.getElementById('state-cr2'),
+                document.getElementById('state-cr3')
+            ];
+
+            checkComplexRegexBtn.addEventListener('click', function() {
+                const input = complexRegexInput.value.toLowerCase();
+                resetStates(complexRegexStates);
+                complexRegexResult.className = 'result';
+                
+                let state = 0; // PP (Par/Par)
+                let countA = 0;
+                let countB = 0;
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i >= input.length) {
+                        clearInterval(interval);
+                        const isValid = state === 0;
+                        if (isValid) {
+                            complexRegexResult.textContent = '✓ Cadena aceptada (par de a y b)';
+                            complexRegexResult.className = 'result success';
+                        } else {
+                            complexRegexResult.textContent = '✗ Cadena rechazada (impar de a o b)';
+                            complexRegexResult.className = 'result error';
+                        }
+                        return;
+                    }
+                    
+                    resetStates(complexRegexStates);
+                    const char = input[i];
+                    
+                    if (char === 'a') countA++;
+                    if (char === 'b') countB++;
+                    
+                    if (countA % 2 === 0 && countB % 2 === 0) state = 0;
+                    else if (countA % 2 === 0 && countB % 2 === 1) state = 1;
+                    else if (countA % 2 === 1 && countB % 2 === 0) state = 2;
+                    else if (countA % 2 === 1 && countB % 2 === 1) state = 3;
+                    
+                    complexRegexStates[state].classList.add('active');
+                    i++;
+                }, 500);
+            });
+
+            // Ejercicio 4: Autómata para la Verificación de Balance de Paréntesis
+            const parensInput = document.getElementById('parens-input');
+            const checkParensBtn = document.getElementById('check-parens');
+            const parensResult = document.getElementById('parens-result');
+            const parensStack = document.getElementById('parens-stack');
+            const parensTape = document.getElementById('parens-tape');
+
+            checkParensBtn.addEventListener('click', function() {
+                const input = parensInput.value;
+                parensResult.className = 'result';
+                
+                parensTape.innerHTML = '';
+                for (let char of input) {
+                    const cell = document.createElement('div');
+                    cell.className = 'tape-cell';
+                    cell.textContent = char;
+                    parensTape.appendChild(cell);
+                }
+                
+                let stack = [];
+                let i = 0;
+                let error = false;
+                
+                const interval = setInterval(() => {
+                    if (i >= input.length || error) {
+                        clearInterval(interval);
+                        const isValid = !error && stack.length === 0;
+                        if (isValid) {
+                            parensResult.textContent = '✓ Paréntesis balanceados';
+                            parensResult.className = 'result success';
+                        } else {
+                            parensResult.textContent = '✗ Paréntesis no balanceados';
+                            parensResult.className = 'result error';
+                        }
+                        return;
+                    }
+                    
+                    const cells = parensTape.querySelectorAll('.tape-cell');
+                    cells.forEach(c => c.classList.remove('active', 'pointer'));
+                    if (i < cells.length) {
+                        cells[i].classList.add('active', 'pointer');
+                    }
+                    
+                    const char = input[i];
+                    if (char === '(') {
+                        stack.push('(');
+                    } else if (char === ')') {
+                        if (stack.length === 0 || stack.pop() !== '(') {
+                            error = true;
+                        }
+                    }
+                    
+                    parensStack.textContent = stack.length > 0 ? stack.join('') : 'ε';
+                    i++;
+                }, 800);
+            });
+
+            // Ejercicio 5: Simulador de una Máquina de Turing
+            const turingInput1 = document.getElementById('turing-input1');
+            const turingInput2 = document.getElementById('turing-input2');
+            const runTuringBtn = document.getElementById('run-turing');
+            const turingResult = document.getElementById('turing-result');
+            const turingTape = document.getElementById('turing-tape');
+            const turingState = document.getElementById('turing-state');
+
+            runTuringBtn.addEventListener('click', function() {
+                const num1 = turingInput1.value;
+                const num2 = turingInput2.value;
+
+                if (!num1.match(/^[01]+$/) || !num2.match(/^[01]+$/)) {
+                    turingResult.textContent = '✗ Solo se permiten caracteres 0 y 1';
+                    turingResult.className = 'result error';
+                    return;
+                }
+
+                // Preparar la cinta: num1 + '0' + num2 + espacios en blanco
+                const tapeContent = num1 + '0' + num2 + '0000000';
+                let tape = tapeContent.split('');
+                let headPos = 0;
+                let currentState = 'q0';
+                turingResult.className = 'result';
+
+                renderTuringTape(tape, headPos);
+                turingState.textContent = currentState;
+
+                function turingStep() {
+                    if (currentState === 'halt') return true;
+
+                    const currentSymbol = tape[headPos] || 'B'; // 'B' representa espacio en blanco
+                    let newSymbol = currentSymbol;
+                    let move = '';
+                    let newState = '';
+
+                    // Estado q0: Moverse a la derecha hasta el separador '0'
+                    if (currentState === 'q0') {
+                        if (currentSymbol === '0') {
+                            newSymbol = '0';
+                            move = 'R';
+                            newState = 'q1';
+                        } else {
+                            newSymbol = currentSymbol;
+                            move = 'R';
+                            newState = 'q0';
+                        }
+                    }
+                    // Estado q1: Moverse a la derecha hasta el final del segundo número
+                    else if (currentState === 'q1') {
+                        if (currentSymbol === '1' || currentSymbol === '0') {
+                            newSymbol = currentSymbol;
+                            move = 'R';
+                            newState = 'q1';
+                        } else if (currentSymbol === 'B') {
+                            newSymbol = 'B';
+                            move = 'L';
+                            newState = 'q2';
+                        }
+                    }
+                    // Estado q2: Sumar bits y manejar carry
+                    else if (currentState === 'q2') {
+                        const bit1 = tape[headPos] === '1' ? 1 : 0;
+                        const bit2 = tape[headPos + 1] === '1' ? 1 : 0; // Siguiente bit de num2
+                        const sum = bit1 + bit2;
+                        if (sum === 0) {
+                            newSymbol = '0';
+                            move = 'L';
+                            newState = 'q4'; // Sin carry
+                        } else if (sum === 1) {
+                            newSymbol = '1';
+                            move = 'L';
+                            newState = 'q4'; // Sin carry
+                        } else if (sum === 2) {
+                            newSymbol = '0';
+                            move = 'L';
+                            newState = 'q3'; // Con carry
+                        }
+                    }
+                    // Estado q3: Propagar carry
+                    else if (currentState === 'q3') {
+                        if (currentSymbol === '0') {
+                            newSymbol = '1';
+                            move = 'L';
+                            newState = 'q4';
+                        } else if (currentSymbol === '1') {
+                            newSymbol = '0';
+                            move = 'L';
+                            newState = 'q3';
+                        } else if (currentSymbol === 'B') {
+                            newSymbol = '1';
+                            move = 'R';
+                            newState = 'q5';
+                        }
+                    }
+                    // Estado q4: Volver al siguiente par de bits
+                    else if (currentState === 'q4') {
+                        if (headPos > 0 && tape[headPos - 1] !== '0') {
+                            newSymbol = currentSymbol;
+                            move = 'R';
+                            newState = 'q2';
+                        } else {
+                            newSymbol = currentSymbol;
+                            move = 'R';
+                            newState = 'q5';
+                        }
+                    }
+                    // Estado q5: Limpiar ceros iniciales y detener
+                    else if (currentState === 'q5') {
+                        if (currentSymbol === '0') {
+                            newSymbol = 'B';
+                            move = 'L';
+                            newState = 'q5';
+                        } else if (currentSymbol === '1' || currentSymbol === 'B') {
+                            newSymbol = currentSymbol;
+                            move = 'R';
+                            newState = 'halt';
+                        }
+                    }
+
+                    tape[headPos] = newSymbol;
+                    if (move === 'R') headPos++;
+                    else if (move === 'L') headPos--;
+                    currentState = newState;
+                    return false;
+                }
+
+                let stepCount = 0;
+                const maxSteps = 2000; // Aumentado para manejar números más largos
+                const interval = setInterval(() => {
+                    const halted = turingStep();
+                    renderTuringTape(tape, headPos);
+                    turingState.textContent = currentState;
+
+                    if (halted || stepCount++ > maxSteps) {
+                        clearInterval(interval);
+                        if (currentState === 'halt') {
+                            const result = tape.join('').replace(/B/g, '').split('0')[0] || '0';
+                            turingResult.textContent = `✓ Resultado: ${result} (binario) = ${parseInt(result, 2)} (decimal)`;
+                            turingResult.className = 'result success';
+                        } else {
+                            turingResult.textContent = '✗ La máquina no terminó en el estado de parada';
+                            turingResult.className = 'result error';
+                        }
+                    }
+                }, 800);
+            });
+
+            function renderTuringTape(tape, headPos) {
+                turingTape.innerHTML = '';
+                tape.forEach((symbol, index) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'tape-cell';
+                    if (index === headPos) cell.classList.add('pointer');
+                    cell.textContent = symbol === 'B' ? '□' : symbol;
+                    turingTape.appendChild(cell);
+                });
+            }
+
+            // Ejercicio 6: Simulador de Red de Petri
+            const runPetriBtn = document.getElementById('run-petri');
+            const petriResult = document.getElementById('petri-result');
+            const petriStates = [
+                document.getElementById('state-pet0'),
+                document.getElementById('state-pet1'),
+                document.getElementById('state-pet2')
+            ];
+            let petriState = 0; // 0: Rojo, 1: Amarillo, 2: Verde
+
+            runPetriBtn.addEventListener('click', function() {
+                resetStates(petriStates);
+                petriResult.className = 'result';
+                
+                petriState = (petriState + 1) % 3;
+                petriStates[petriState].classList.add('active');
+                
+                const states = ['Rojo', 'Amarillo', 'Verde'];
+                petriResult.textContent = `✓ Estado: ${states[petriState]}`;
+                petriResult.className = 'result success';
+            });
+
+            // Ejercicio 7: Autómata para el Reconocimiento de Idiomas Contextuales
+            const pdaInput = document.getElementById('pda-input');
+            const runPdaBtn = document.getElementById('run-pda');
+            const pdaResult = document.getElementById('pda-result');
+            const pdaStack = document.getElementById('pda-stack');
+            const pdaTape = document.getElementById('pda-tape');
+
+            runPdaBtn.addEventListener('click', function() {
+                const input = pdaInput.value.trim().toLowerCase();
+                pdaResult.className = 'result';
+
+                const tokens = tokenizeInput(input);
+                pdaTape.innerHTML = '';
+                tokens.forEach(token => {
+                    const cell = document.createElement('div');
+                    cell.className = 'tape-cell';
+                    cell.textContent = token;
+                    pdaTape.appendChild(cell);
+                });
+
+                let stack = ['Z0']; // Símbolo inicial de la pila
+                let i = 0;
+                let error = false;
+
+                const interval = setInterval(() => {
+                    if (i >= tokens.length) {
+                        clearInterval(interval);
+                        // Validación final: La pila debe quedar en Z0
+                        const isValid = stack.length === 1 && stack[0] === 'Z0';
+                        if (isValid) {
+                            pdaResult.textContent = '✓ Expresión válida';
+                            pdaResult.className = 'result success';
+                        } else {
+                            pdaResult.textContent = '✗ Expresión inválida';
+                            pdaResult.className = 'result error';
+                        }
+                        return;
+                    }
+
+                    const cells = pdaTape.querySelectorAll('.tape-cell');
+                    cells.forEach(c => c.classList.remove('active', 'pointer'));
+                    if (i < cells.length) {
+                        cells[i].classList.add('active', 'pointer');
+                    }
+
+                    const token = tokens[i];
+                    let reduced = false;
+
+                    if (/[a-z]/.test(token)) { // Identificador
+                        stack.push('identificador');
+                    } else if (/\+|-|\*|\//.test(token)) { // Operador
+                        if (stack[stack.length - 1] === 'identificador') {
+                            stack.push('operador');
+                        } else {
+                            error = true;
+                        }
+                    }
+
+                    // Reducción inmediata si hay un patrón válido
+                    while (!error && stack.length >= 3) {
+                        if (stack[stack.length - 3] === 'identificador' && 
+                            stack[stack.length - 2] === 'operador' && 
+                            stack[stack.length - 1] === 'identificador') {
+                            stack.splice(stack.length - 3, 3, 'expresión');
+                            reduced = true;
+                        } else if (stack[stack.length - 1] === 'expresión' && stack.length > 1) {
+                            stack.pop(); // Reducir expresión si es el último elemento
+                            reduced = true;
+                        } else {
+                            break;
+                        }
+                    }
+
+                    // Si no se redujo y la pila no está en un estado válido, marcar error
+                    if (!reduced && stack.length > 1 && !/identificador|operador/.test(stack[stack.length - 1])) {
+                        error = true;
+                    }
+
+                    // Actualizar visualización de la pila
+                    pdaStack.textContent = stack.length > 0 ? stack.join(', ') : 'ε';
+                    i++;
+                }, 800);
+            });
+
+            function tokenizeInput(input) {
+                const tokens = input.match(/([a-z]|[+\-*/])/g) || [];
+                return tokens;
+            }
+
+            // Ejercicio 8 y 9: Simulador de Control de Robot Móvil y Circuito Digital
+            const robotInput = document.getElementById('robot-input');
+            const flipFlopDInput = document.getElementById('flipflop-d');
+            const flipFlopClockInput = document.getElementById('flipflop-clock');
+            const runFlipFlopBtn = document.getElementById('run-flipflop');
+            const robotFlipFlopResult = document.getElementById('robot-flipflop-result');
+
+            let robotX = 50;
+            let robotY = 50;
+            let robotSpeed = 5;
+            let obstacles = [];
+            let hasObstacle = false; // Controla si hay un obstáculo
+            let flipFlopState = 0; // Q=0 inicialmente
+
+            // p5.js sketch combinado para el robot y el flip-flop
+            const robotFlipFlopSketch = (p) => {
+                p.setup = function() {
+                    p.createCanvas(400, 400);
+                    p.background(255);
+                    obstacles = [
+                        { x: 200, y: 50, w: 20, h: 20 },
+                        { x: 300, y: 50, w: 20, h: 20 },
+                        { x: 200, y: 150, w: 20, h: 20 }
+                    ];
+                };
+
+                p.draw = function() {
+                    p.background(255);
+
+                    // Sección del Robot Móvil (parte superior del canvas)
+                    p.fill(0);
+                    p.textSize(16);
+                    p.textAlign(p.LEFT);
+                    p.text('Robot Móvil', 10, 20);
+
+                    // Dibujar obstáculos
+                    p.fill(0); // Obstáculos en negro
+                    obstacles.forEach(obs => {
+                        p.rect(obs.x, obs.y, obs.w, obs.h);
+                    });
+
+                    // Dibujar robot (verde si no hay obstáculo, rojo si lo hay)
+                    p.fill(hasObstacle ? 255 : 0, hasObstacle ? 0 : 255, 0);
+                    p.ellipse(robotX, robotY, 20, 20);
+                    p.fill(0);
+                    p.textAlign(p.CENTER);
+                    p.text(hasObstacle ? 'Obstáculo' : 'Avanzando', robotX, robotY - 20);
+
+                    // Línea separadora
+                    p.stroke(150);
+                    p.line(0, 200, p.width, 200);
+                    p.noStroke();
+
+                    // Sección del Flip-Flop D (parte inferior del canvas)
+                    p.fill(0);
+                    p.textSize(16);
+                    p.textAlign(p.LEFT);
+                    p.text('Flip-Flop D', 10, 220);
+
+                    // Dibujar estados del flip-flop
+                    if (flipFlopState === 0) {
+                        p.fill(46, 204, 113); // Verde cuando Q=0
+                    } else {
+                        p.fill(200); // Gris cuando Q no es 0
+                    }
+                    p.ellipse(100, 300, 50, 50);
+
+                    if (flipFlopState === 1) {
+                        p.fill(46, 204, 113); // Verde cuando Q=1
+                    } else {
+                        p.fill(200); // Gris cuando Q no es 1
+                    }
+                    p.ellipse(300, 300, 50, 50);
+
+                    // Etiquetas del flip-flop
+                    p.fill(0);
+                    p.textSize(14);
+                    p.textAlign(p.CENTER);
+                    p.text('Q=0', 100, 300);
+                    p.text('Q=1', 300, 300);
+
+                    // Transiciones del flip-flop
+                    p.stroke(0);
+                    p.line(125, 300, 275, 300);
+                    p.line(275, 300, 260, 290);
+                    p.line(275, 300, 260, 310);
+                    p.text('D=0, Clock=1', 200, 280);
+                    p.line(275, 300, 125, 300);
+                    p.line(125, 300, 140, 290);
+                    p.line(125, 300, 140, 310);
+                    p.text('D=1, Clock=1', 200, 340);
+                    p.noStroke();
+                };
+
+                // Manejar movimiento del robot con teclas
+                p.keyPressed = function() {
+                    let newX = robotX;
+                    let newY = robotY;
+
+                    if (p.keyCode === p.LEFT_ARROW) {
+                        newX -= robotSpeed;
+                    } else if (p.keyCode === p.RIGHT_ARROW) {
+                        newX += robotSpeed;
+                    } else if (p.keyCode === p.UP_ARROW) {
+                        newY -= robotSpeed;
+                    } else if (p.keyCode === p.DOWN_ARROW) {
+                        newY += robotSpeed;
+                    }
+
+                    // Verificar colisión con obstáculos si hay un obstáculo (sensor=1)
+                    let canMove = true;
+                    if (hasObstacle) {
+                        for (let obs of obstacles) {
+                            if (
+                                newX + 10 > obs.x &&
+                                newX - 10 < obs.x + obs.w &&
+                                newY + 10 > obs.y &&
+                                newY - 10 < obs.y + obs.h
+                            ) {
+                                canMove = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Actualizar posición si no hay colisión y está dentro de los límites
+                    if (canMove && newX >= 10 && newX <= p.width - 10 && newY >= 10 && newY <= 190) {
+                        robotX = newX;
+                        robotY = newY;
+                    }
+                };
+            };
+
+            new p5(robotFlipFlopSketch, 'robot-flipflop-visualization');
+
+            // Manejar entrada del sensor para el robot
+            robotInput.addEventListener('input', function() {
+                const sensor = robotInput.value;
+                robotFlipFlopResult.className = 'result';
+                
+                if (sensor === '0') {
+                    hasObstacle = false;
+                    robotFlipFlopResult.textContent = '✓ Robot puede avanzar';
+                    robotFlipFlopResult.className = 'result success';
+                } else if (sensor === '1') {
+                    hasObstacle = true;
+                    robotFlipFlopResult.textContent = '✓ Obstáculo detectado: No puede avanzar hacia obstáculos';
+                    robotFlipFlopResult.className = 'result success';
+                } else {
+                    hasObstacle = false;
+                    robotFlipFlopResult.textContent = '✗ Entrada inválida (usa 0 o 1)';
+                    robotFlipFlopResult.className = 'result error';
+                }
+            });
+
+            // Manejar el flip-flop
+            runFlipFlopBtn.addEventListener('click', function() {
+                const d = flipFlopDInput.value;
+                const clock = flipFlopClockInput.value;
+                robotFlipFlopResult.className = 'result';
+                
+                if (clock === '1' && (d === '0' || d === '1')) {
+                    flipFlopState = parseInt(d);
+                    robotFlipFlopResult.textContent = `✓ Salida Q: ${flipFlopState}`;
+                    robotFlipFlopResult.className = 'result success';
+                } else {
+                    robotFlipFlopResult.textContent = '✗ Entrada inválida o reloj no activo';
+                    robotFlipFlopResult.className = 'result error';
+                }
+            });
+
+            // Ejercicio 10: Generador de Lenguajes Regulares
+            const runGeneratorBtn = document.getElementById('run-generator');
+            const generatorResult = document.getElementById('generator-result');
+            const generatorTape = document.getElementById('generator-tape');
+
+            runGeneratorBtn.addEventListener('click', function() {
+                generatorResult.className = 'result';
+                const phone = generatePhoneNumber();
+                
+                generatorTape.innerHTML = '';
+                phone.split('').forEach(char => {
+                    const cell = document.createElement('div');
+                    cell.className = 'tape-cell';
+                    cell.textContent = char;
+                    generatorTape.appendChild(cell);
+                });
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    const cells = generatorTape.querySelectorAll('.tape-cell');
+                    cells.forEach(c => c.classList.remove('active', 'pointer'));
+                    if (i < cells.length) {
+                        cells[i].classList.add('active', 'pointer');
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        generatorResult.textContent = `✓ Número de teléfono generado: ${phone}`;
+                        generatorResult.className = 'result success';
+                    }
+                }, 500);
+            });
+
+            function generatePhoneNumber() {
+                const digits = () => Math.floor(Math.random() * 10);
+                return `${digits()}${digits()}${digits()}-${digits()}${digits()}${digits()}-${digits()}${digits()}${digits()}${digits()}`;
+            }
+
+            // Ejercicio 11: Reconocedor de Patrón en Datos de Sensor
+            const sensorInput = document.getElementById('sensor-input');
+            const runSensorBtn = document.getElementById('run-sensor');
+            const sensorResult = document.getElementById('sensor-result');
+            const sensorTape = document.getElementById('sensor-tape');
+
+            runSensorBtn.addEventListener('click', function() {
+                const input = sensorInput.value;
+                sensorResult.className = 'result';
+                
+                const temps = input.split(',').map(Number);
+                sensorTape.innerHTML = '';
+                temps.forEach(temp => {
+                    const cell = document.createElement('div');
+                    cell.className = 'tape-cell';
+                    cell.textContent = temp;
+                    sensorTape.appendChild(cell);
+                });
+                
+                let i = 0;
+                let error = false;
+                const interval = setInterval(() => {
+                    if (i >= temps.length || error) {
+                        clearInterval(interval);
+                        const isValid = !error && temps.length > 1;
+                        if (isValid) {
+                            sensorResult.textContent = '✓ Patrón creciente detectado';
+                            sensorResult.className = 'result success';
+                        } else {
+                            sensorResult.textContent = '✗ No se detectó patrón creciente';
+                            sensorResult.className = 'result error';
+                        }
+                        return;
+                    }
+                    
+                    const cells = sensorTape.querySelectorAll('.tape-cell');
+                    cells.forEach(c => c.classList.remove('active', 'pointer'));
+                    if (i < cells.length) {
+                        cells[i].classList.add('active', 'pointer');
+                    }
+                    
+                    if (i > 0 && (isNaN(temps[i]) || temps[i] <= temps[i-1])) {
+                        error = true;
+                    }
+                    i++;
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

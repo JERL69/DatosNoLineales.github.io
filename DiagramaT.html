@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiagramaT</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: "default",
+            themeVariables: {
+                primaryColor: "rgba(255, 255, 255, 0.7)", /* Fondo blanco semi-transparente */
+                edgeLabelBackground: "rgba(255, 255, 255, 0.5)", /* Fondo de etiquetas semi-transparente */
+                clusterBkg: "rgba(255, 255, 255, 0.7)", /* Fondo de grupos semi-transparente */
+                nodeBorder: "#8A2BE2", /* Borde en color violeta */
+                fontSize: "14px",
+                fontFamily: "Arial"
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('fondoDI.jpg');
+            color: #333;
+        }
+        h1 {
+            font-family: 'Lobster', cursive;
+            color: #FFA500;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        h2 {
+            color: #00BFFF;
+        }
+        .diagram {
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .button-container a {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+        }
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>DiagramaT</h1>
+
+    <div class="diagram">
+        <h2>Solución de la Torre de Hanói para Q4</h2>
+        <pre class="mermaid">
+graph TD;
+    A[Inicio] --> B[Crear grafo Q4 con 16 vértices];
+    B --> C[Inicializar estado inicial: 0000];
+    C --> D[Inicializar estado final: 1111];
+    D --> E[Crear lista vacía para ciclo hamiltoniano];
+    E --> F[Llamar a EncontrarCicloHamiltoniano];
+    F --> G[Retornar lista con ciclo hamiltoniano];
+    G --> H[Fin];
+        </pre>
+    </div>
+
+    <div class="diagram">
+        <h2>Solución de la Torre de Hanói para Q5</h2>
+        <pre class="mermaid">
+graph TD;
+    A[Inicio] --> B[Crear grafo Q5 con 32 vértices];
+    B --> C[Inicializar estado inicial: 00000];
+    C --> D[Inicializar estado final: 11111];
+    D --> E[Crear lista vacía para ciclo hamiltoniano];
+    E --> F[Llamar a EncontrarCicloHamiltoniano];
+    F --> G[Retornar lista con ciclo hamiltoniano];
+    G --> H[Fin];
+        </pre>
+    </div>
+
+    <div class="button-container">
+        <a href="Principal.html">Volver al inicio</a>
+    </div>
+
+</body>
+</html>
